@@ -17,4 +17,52 @@ const auth = (req, res, next) => {
   });
 };
 
-module.exports = auth;
+const checkOwnership = async (req, res, next) => {
+  const { postId } = req.params;
+  try {
+    const post = await BlogsModel.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.userId.toString() !== req.userId.toString()) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to edit/delete this post" });
+    }
+
+    next();
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ message: "An error occurred while checking ownership" });
+  }
+};
+
+const checkCommentOwnership = async (req, res, next) => {
+  const { commentId } = req.params;
+  try {
+    const comment = await CommentModel.findById(commentId);
+
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    if (comment.userId.toString() !== req.userId.toString()) {
+      return res.status(403).json({
+        message: "You are not authorized to edit/delete this comment",
+      });
+    }
+
+    next();
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ message: "An error occurred while checking comment ownership" });
+  }
+};
+
+module.exports = { auth, checkOwnership, checkCommentOwnership };

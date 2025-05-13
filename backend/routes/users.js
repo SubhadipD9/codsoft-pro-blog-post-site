@@ -1,16 +1,19 @@
 require("dotenv").config();
-const { Router, express } = require("express");
+const express = require("express");
 const { z } = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { UserModel } = require("../db/users");
 
-const userRouter = Router();
+const userRouter = express.Router();
 
-const passwordValidation = new RegExp(
-  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
-);
+const JWT_SECRET = process.env.JWT_SECRET;
 
 userRouter.use(express.json());
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined in environment variables");
+}
 
 userRouter.post("/signup", async (req, res) => {
   const requireUserData = z.object({
@@ -33,31 +36,76 @@ userRouter.post("/signup", async (req, res) => {
     username: z.string().min(3).max(30),
   });
 
-  if (!requireUserData.safeParse(req.body).success) {
+  const validationResult = requireUserData.safeParse(req.body);
+
+  if (!validationResult.success) {
     res.status(403).json({
       message: "Incorrect format or you miss some data",
-      error: requireUserData.safeParse(req.body).error.issues[0].message,
+      error: validationResult.error.issues[0].message,
     });
     return;
   }
 
-  const userData = requireUserData.safeParse(req.body).data;
+  const userData = validationResult.data;
 
-  const hashedPassword = bcrypt.hash(userData.password, 10);
+  try {
+    const [existingEmail, existingUserName] = await Promise.all([
+      UserModel.findOne({ email: userData.email }),
+      UserModel.findOne({ username: userData.username }),
+    ]);
 
-  res.status(200).json({
-    message: "User successfully created",
-  });
+    if (existingEmail || existingUserName) {
+      res.status(409).json({
+        message: existingEmail
+          ? "This email already exists"
+          : "This username is already taken",
+      });
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+
+    await UserModel.create({
+      email: userData.email,
+      password: hashedPassword,
+      username: userData.username,
+    });
+
+    res.status(201).json({
+      message: "User successfully created",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "An error occurred while registering the user.",
+    });
+  }
 });
 
 userRouter.post("/signin", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({
+      message: "email and password must be provided",
+    });
+  }
+
   try {
-    const { email, password } = req.body;
-    const isPasswordValid = await bcrypt.compare(password, userRouter.password);
+    const user = await UserModel.findOne({ email: email });
+
+    if (!user) {
+      res.status(403).json({
+        message: "User not found",
+      });
+      return;
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(403).json({
-        message: "Incorrect credentials",
+      return res.status(401).json({
+        message: "password is incorrect. Please check your password.",
       });
     }
 
@@ -69,11 +117,12 @@ userRouter.post("/signin", async (req, res) => {
       });
     } else {
       res.status(403).json({
-        message: "Incorrect credentials",
+        message:
+          "Email or password is incorrect. Please check your credentials.",
       });
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return res.status(500).json({
       message: "An error occurred during login.",
     });

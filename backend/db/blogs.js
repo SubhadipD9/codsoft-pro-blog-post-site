@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const ObjectId = mongoose.ObjectId;
 
 const BlogsSchema = new Schema({
-  Id: ObjectId,
   title: String,
-  mainBody: String,
+  content: String,
+  author: String,
+  createdAt: { type: Date, default: Date.now },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
 });
 
 const BlogsModel = mongoose.model("blogs", BlogsSchema);

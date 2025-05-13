@@ -1,17 +1,25 @@
 const { Router } = require("express");
-const auth = require("../auth/middleware");
-const checkOwnership = require("../auth/middleware");
+const { auth } = require("../auth/middleware");
+const { checkOwnership } = require("../auth/middleware");
 const { BlogsModel } = require("../db/blogs");
+const { UserModel } = require("../db/users");
 
 const blogsRoutes = Router();
 
-blogsRoutes.get("/getAllPost", auth, checkOwnership, async (req, res) => {
+blogsRoutes.get("/getAllPost", auth, async (req, res) => {
   try {
-    const allBlogs = await BlogsModel.find();
+    const userId = req.userId;
+    const userBlogs = await BlogsModel.find({ userId: userId });
+
+    if (!userBlogs || userBlogs.length === 0) {
+      return res.status(404).json({
+        message: "No posts found for this user",
+      });
+    }
 
     res.status(200).json({
-      message: "Post fetch successfully",
-      data: allBlogs,
+      message: "Posts fetched successfully",
+      data: userBlogs,
     });
   } catch (err) {
     console.error(err);
@@ -22,7 +30,7 @@ blogsRoutes.get("/getAllPost", auth, checkOwnership, async (req, res) => {
 });
 
 blogsRoutes.post("/add", auth, async (req, res) => {
-  const { title, content, author } = req.body;
+  const { title, content } = req.body;
   const userId = req.userId;
 
   if (!title || !content) {
@@ -33,6 +41,16 @@ blogsRoutes.post("/add", auth, async (req, res) => {
   }
 
   try {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const author = user.username;
+
     const newPost = await BlogsModel.create({
       title,
       content,
@@ -54,12 +72,12 @@ blogsRoutes.post("/add", auth, async (req, res) => {
 
 blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
   const { postId } = req.params;
-  const { title, content, author } = req.body;
+  const { title, content } = req.body;
 
   try {
     const updatedPost = await BlogsModel.findByIdAndUpdate(
       postId,
-      { title, content, author },
+      { title, content, author: req.userId },
       { new: true }
     );
 

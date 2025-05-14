@@ -73,11 +73,20 @@ blogsRoutes.post("/add", auth, async (req, res) => {
 blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
   const { postId } = req.params;
   const { title, content } = req.body;
+  const userId = req.userId;
 
   try {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
     const updatedPost = await BlogsModel.findByIdAndUpdate(
       postId,
-      { title, content, author: req.userId },
+      { title, content, author: user.username },
       { new: true }
     );
 

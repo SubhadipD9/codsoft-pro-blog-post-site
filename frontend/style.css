@@ -11,7 +11,7 @@ html, body {
 }
 
 body {
-  font-family: 'Georgia', serif;
+  font-family: 'Montserrat', sans-serif;
   background-color: #fdfaf6;
   justify-content: space-between;
 }
@@ -81,14 +81,12 @@ header {
   line-height: 1.2;
   color: #000;
   margin: 0 0 24px;
-  font-family: 'Georgia', serif;
 }
 
 .hero p {
   font-size: 18px;
   color: #333;
   margin-bottom: 40px;
-  font-family: 'Arial', sans-serif;
 }
 
 .hero-btn {

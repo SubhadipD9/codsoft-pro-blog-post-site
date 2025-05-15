@@ -16,7 +16,7 @@ homeRoute.get("/", async (req, res) => {
 
     res.status(200).json({
       message: "All posts fetched successfully",
-      data: allPost,
+      allPost,
     });
   } catch (err) {
     console.error(err);

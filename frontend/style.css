@@ -1,0 +1,134 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  font-family: 'Georgia', serif;
+  background-color: #fdfaf6;
+  justify-content: space-between;
+}
+
+header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #fdfaf6;
+  padding: 0 24px;
+}
+
+.navbar {
+  max-width: 1200px;
+  height: 80px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.logo {
+  font-size: 29px;
+  font-weight: bold;
+  color: #000;
+}
+
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #000;
+  font-size: 18px;
+  font-weight: 400;
+  padding: 8px;
+  transition: color 0.3s ease;
+}
+
+/* CTA Button */
+.nav-links .cta {
+  background-color: #000;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.nav-links .cta:hover {
+  background-color: #333;
+}
+
+/* Hero Section Styles */
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-size: 64px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #000;
+  margin: 0 0 24px;
+  font-family: 'Georgia', serif;
+}
+
+.hero p {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 40px;
+  font-family: 'Arial', sans-serif;
+}
+
+.hero-btn {
+  display: inline-block;
+  background-color: #000;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.hero-btn:hover {
+  background-color: #333;
+}
+
+footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 24px 16px;
+  background-color: #fdfaf6;
+}
+
+.footer-container {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  font-size: 14px;
+}
+
+.footer-container p {
+  text-decoration: none;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.footer-container a:hover {
+  color: #000;
+}

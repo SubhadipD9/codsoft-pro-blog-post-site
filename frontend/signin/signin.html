@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signin</title>
+    <link rel="stylesheet" href="./signin.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+
+        <form class="signin-form">
+            <h2>Signin</h2>
+            <div class="input-section">
+                <label for="email">email</label>
+                <input type="text" id="email" placeholder="example@gmail.com">
+            </div>
+            <div class="input-section">
+                <label for="password">password</label>
+                <input type="password" id="password">
+            </div>
+            <button class="submit-button" type="submit">Signin</button>
+            <p class="error-message"></p>
+        </form>
+
+        <!-- Switch to Signup -->
+        <p class="form-footer">
+            Don't have an account?
+            <a href="../signup/signup.html">Sign up here</a>
+        </p>
+    </div>
+
+    <!-- Result Message -->
+    <div class="result-div">
+        <p>You have signed in successfully. Click the Todos button to continue.</p>
+        <a href="../blogs/index.html" class="blogs-btn">Todos</a>
+    </div>
+
+    <script src="./signin.js"></script>
+</body>
+
+
+</html>

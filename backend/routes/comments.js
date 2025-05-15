@@ -1,7 +1,6 @@
 const { Router } = require("express");
 const { CommentModel } = require("../db/comment");
-const { auth } = require("../auth/middleware");
-const { checkCommentOwnership } = require("../auth/middleware");
+const { auth, checkCommentOwnership } = require("../auth/middleware");
 
 const commentRoutes = Router();
 

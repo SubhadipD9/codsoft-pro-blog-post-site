@@ -1,0 +1,122 @@
+/* Base Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Georgia', serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Form Container */
+.container {
+    background-color: #1e1e1e;
+    padding: 40px 32px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    max-width: 400px;
+    width: 100%;
+}
+
+/* Heading */
+.signup-form h2 {
+    margin-bottom: 24px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 28px;
+}
+
+/* Input Sections */
+.input-section {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-section label {
+    margin-bottom: 6px;
+    color: #cccccc;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.input-section input {
+    padding: 12px;
+    border: 1px solid #444;
+    background-color: #2a2a2a;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.input-section input:focus {
+    border-color: #4fc3f7;
+    outline: none;
+}
+
+/* Signup Button */
+.signup-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #000;
+    border: none;
+    border-radius: 999px;
+    color: white;
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.signup-btn:hover {
+    background-color: #333;
+}
+
+/* Error Message */
+.error-message {
+    margin-top: 12px;
+    color: #f44336;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Success Message Box */
+.result-div {
+    display: none;
+    margin-top: 20px;
+    background-color: #1b4024;
+    border: 1px solid #2e7d32;
+    color: #c8e6c9;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Sign-in Button (After Signup) */
+.signin-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 12px 24px;
+    background-color: #000;
+    color: white;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.signin-btn:hover {
+    background-color: #333;
+}

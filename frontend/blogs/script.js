@@ -64,4 +64,24 @@ async function displayBlogs() {
   }
 }
 
+const token = localStorage.getItem("token");
+
+if (token) {
+  signinBtn.style.display = "none";
+  signupBtn.style.display = "none";
+} else {
+  signinBtn.style.display = "block";
+  signupBtn.style.display = "block";
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const username = localStorage.getItem("username");
+  const greeting = document.getElementById("user-greeting");
+
+  if (username && greeting) {
+    greeting.textContent = `👋 Hello, ${username}`;
+    greeting.style.display = "inline-block";
+  }
+});
+
 window.onload = displayBlogs;

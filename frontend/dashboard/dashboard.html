@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="dashboard.css" />
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">Mind 🧠</div>
+            <nav class="nav-links">
+                <a href="../blogs/index.html">Home</a>
+                <a class="create-post" href="createPost.html">Create</a>
+                <span id="user-greeting" style="display: none; font-size: 18px;"></span>
+                <button id="logout-btn"
+                    style="display: none; margin-left: 30px ;padding: 5px 7px; border-radius: 4px; color: white; background-color: black; font-weight: 500;">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="user-blog-post"></div>
+        <p class="show-error"></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

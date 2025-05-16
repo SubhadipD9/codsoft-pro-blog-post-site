@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="dashboard.css" />
+    <title>Edit Blog</title>
+    <style>
+        .edit-form {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .edit-form input,
+        .edit-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .edit-form button {
+            padding: 12px 24px;
+            background-color: #3F72AF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .edit-form button:hover {
+            background-color: #365f91;
+        }
+
+        .show-error {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="navbar">
+            <div class="logo">Mind 🧠</div>
+            <nav class="nav-links">
+                <a href="../blogs/index.html">Home</a>
+                <a href="createPost.html">Create</a>
+                <span id="user-greeting" style="display: none; font-size: 18px;"></span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <form class="edit-form" id="editForm">
+            <h2>Edit Blog Post</h2>
+            <input type="text" id="title" placeholder="Blog Title" required />
+            <textarea id="content" placeholder="Blog Content" rows="10" required></textarea>
+            <button type="submit">Save Changes</button>
+        </form>
+        <p class="show-error"></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const postId = new URLSearchParams(window.location.search).get("id");
+        const token = localStorage.getItem("token");
+        const titleInput = document.getElementById("title");
+        const contentInput = document.getElementById("content");
+        const errorDisplay = document.querySelector(".show-error");
+
+        if (!postId || !token) {
+            errorDisplay.textContent = "Missing blog ID or authentication.";
+        } else {
+            axios.get(`http://localhost:3000/api/blogs/view/${postId}`, {
+                headers: { authorization: token }
+            }).then(response => {
+                const post = response.data.post;
+                titleInput.value = post.title;
+                contentInput.value = post.content;
+            }).catch(err => {
+                errorDisplay.textContent = "Error fetching blog post.";
+            });
+        }
+
+        document.getElementById("editForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            try {
+                const response = await axios.put(
+                    `http://localhost:3000/api/blogs/edit/${postId}`,
+                    {
+                        title: titleInput.value,
+                        content: contentInput.value
+                    },
+                    {
+                        headers: { authorization: token }
+                    }
+                );
+
+                if (response.status === 201) {
+                    alert("Post updated successfully!");
+                    window.location.href = `dashboard.html`;
+                } else {
+                    errorDisplay.textContent = "Failed to update post.";
+                }
+            } catch (err) {
+                console.error(err);
+                errorDisplay.textContent = "An error occurred while updating.";
+            }
+        });
+    </script>
+
+</body>
+
+</html>

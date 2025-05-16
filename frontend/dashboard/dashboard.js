@@ -61,7 +61,7 @@ async function showPost() {
       editBtn.style.color = "#fff";
       editBtn.style.cursor = "pointer";
       editBtn.addEventListener("click", () => {
-        window.location.href = `edit.html?id=${data._id}`;
+        window.location.href = `edit.html?slug=${data.slug}`;
       });
 
       const deleteBtn = document.createElement("button");
@@ -125,6 +125,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 if (username) {
   document.getElementById("logout-btn").style.display = "inline-block";
+  document.getElementById("logout-btn").style.cursor = "pointer";
   document.getElementById("logout-btn").addEventListener("click", () => {
     localStorage.clear();
     location.href = "../signin/signin.html";

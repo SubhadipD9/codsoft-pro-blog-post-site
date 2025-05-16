@@ -77,28 +77,39 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        const postId = new URLSearchParams(window.location.search).get("id");
+        const urlParams = new URLSearchParams(window.location.search);
+        const slug = urlParams.get("slug");
         const token = localStorage.getItem("token");
+
         const titleInput = document.getElementById("title");
         const contentInput = document.getElementById("content");
         const errorDisplay = document.querySelector(".show-error");
 
-        if (!postId || !token) {
-            errorDisplay.textContent = "Missing blog ID or authentication.";
+        let postId = null;
+
+        if (!slug || !token) {
+            errorDisplay.textContent = "Missing blog slug or authentication.";
         } else {
-            axios.get(`http://localhost:3000/api/blogs/view/${postId}`, {
+            axios.get(`http://localhost:3000/api/blogs/view-for-edit/${slug}`, {
                 headers: { authorization: token }
             }).then(response => {
                 const post = response.data.post;
+                postId = post._id;
                 titleInput.value = post.title;
                 contentInput.value = post.content;
             }).catch(err => {
+                console.error(err);
                 errorDisplay.textContent = "Error fetching blog post.";
             });
         }
 
         document.getElementById("editForm").addEventListener("submit", async (e) => {
             e.preventDefault();
+
+            if (!postId) {
+                errorDisplay.textContent = "Post ID not loaded. Try refreshing the page.";
+                return;
+            }
 
             try {
                 const response = await axios.put(
@@ -112,7 +123,7 @@
                     }
                 );
 
-                if (response.status === 201) {
+                if (response.status === 200) {
                     alert("Post updated successfully!");
                     window.location.href = `dashboard.html`;
                 } else {
@@ -124,6 +135,7 @@
             }
         });
     </script>
+
 
 </body>
 

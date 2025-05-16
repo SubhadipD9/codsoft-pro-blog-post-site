@@ -22,7 +22,7 @@ async function displayBlogs() {
       newDiv.style.backgroundColor = "#fff";
 
       const titleEl = document.createElement("a");
-      titleEl.href = `../post/index.html?id=${blog._id}`;
+      titleEl.href = `../post/index.html?slug=${blog.slug}`;
       titleEl.textContent = blog.title;
       titleEl.style.fontSize = "24px";
       titleEl.style.textDecoration = "none";
@@ -43,7 +43,7 @@ async function displayBlogs() {
       authorEl.style.marginTop = "10px";
 
       const readMoreLink = document.createElement("a");
-      readMoreLink.href = `../post/index.html?id=${blog._id}`;
+      readMoreLink.href = `../post/index.html?slug=${blog.slug}`;
       readMoreLink.textContent = "Read more →";
       readMoreLink.style.color = "#3F72AF";
       readMoreLink.style.textDecoration = "none";
@@ -65,13 +65,16 @@ async function displayBlogs() {
 }
 
 const token = localStorage.getItem("token");
+const dashboardBtn = document.getElementById("dashboard");
 
 if (token) {
   signinBtn.style.display = "none";
   signupBtn.style.display = "none";
+  dashboardBtn.style.display = "block";
 } else {
   signinBtn.style.display = "block";
   signupBtn.style.display = "block";
+  dashboardBtn.style.display = "none";
 }
 
 window.addEventListener("DOMContentLoaded", () => {

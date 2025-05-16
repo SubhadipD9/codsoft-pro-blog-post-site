@@ -1,18 +1,19 @@
 const postSection = document.querySelector(".blog-post");
 const errorSection = document.querySelector(".show-error");
 
-const postId = new URLSearchParams(window.location.search).get("id");
+const urlParams = new URLSearchParams(window.location.search);
+const slug = urlParams.get("slug");
 
-if (postId) {
-  displayPost(postId);
+if (slug) {
+  displayPost(slug);
 } else {
   errorSection.textContent = "No post ID found in URL.";
 }
 
-async function displayPost(postId) {
+async function displayPost(slug) {
   try {
     const response = await axios.get(
-      `http://localhost:3000/api/blogs/view/${postId}`
+      `http://localhost:3000/api/blogs/display/${slug}`
     );
     const post = response.data.post;
 

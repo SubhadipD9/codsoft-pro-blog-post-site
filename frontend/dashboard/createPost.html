@@ -177,6 +177,7 @@
                 if (err.response && err.response.status === 403) {
                     alert("Session expired. Please sign in again.");
                     localStorage.removeItem("token");
+                    localStorage.removeItem("username")
                     window.location.href = "../signin/signin.html";
                 } else {
                     errorSection.textContent = "An error occurred while creating.";

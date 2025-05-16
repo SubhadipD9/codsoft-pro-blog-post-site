@@ -52,8 +52,15 @@ async function displayPost(slug) {
 
     postSection.appendChild(postContainer);
   } catch (error) {
-    errorSection.textContent =
-      "Failed to load the blog post. Please try again.";
+    if (error.response.status === 403) {
+      alert("Session expired. Please signin again");
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      window.location.href = "../signin/signin.html";
+    } else {
+      errorSection.textContent =
+        "Failed to load the blog post. Please try again.";
+    }
   }
 }
 

@@ -59,7 +59,14 @@ async function displayBlogs() {
       displaySection.appendChild(newDiv);
     });
   } catch (error) {
-    errorSection.textContent = "Failed to load blogs. Please try again.";
+    if (error.response.status === 403) {
+      alert("Session expired. Please signin again");
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      window.location.href = "../signin/signin.html";
+    } else {
+      errorSection.textContent = "Failed to load blogs. Please try again.";
+    }
   }
 }
 

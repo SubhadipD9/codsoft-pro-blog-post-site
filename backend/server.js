@@ -9,8 +9,15 @@ const cors = require("cors");
 
 const app = express();
 
+const allowedOrigin = process.env.AUTHORIZE_URL;
+
 app.use(express.json());
-app.use(cors());
+
+app.use(
+  cors({
+    origin: allowedOrigin,
+  })
+);
 
 const PORT = process.env.PORT || 3001;
 const DB_URL = process.env.DB_URL;

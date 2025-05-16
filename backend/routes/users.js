@@ -111,7 +111,7 @@ userRouter.post("/signin", async (req, res) => {
 
     if (user) {
       const token = jwt.sign({ id: user._id.toString() }, JWT_SECRET, {
-        expiresIn: "3h",
+        expiresIn: "1h",
       });
       res.status(200).json({
         message: "You are logged in",

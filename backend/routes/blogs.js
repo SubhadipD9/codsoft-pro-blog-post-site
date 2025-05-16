@@ -3,112 +3,110 @@ const { auth } = require("../auth/middleware");
 const { checkOwnership } = require("../auth/middleware");
 const { BlogsModel } = require("../db/blogs");
 const { UserModel } = require("../db/users");
+const slugify = require("../utils/slugify");
 
 const blogsRoutes = Router();
 
+// Fetch user posts
 blogsRoutes.get("/userPost", auth, async (req, res) => {
   try {
-    const userId = req.userId;
-    const userBlogs = await BlogsModel.find({ userId: userId });
+    const userBlogs = await BlogsModel.find({ userId: req.userId });
 
     if (!userBlogs || userBlogs.length === 0) {
-      return res.status(404).json({
-        message: "No posts found for this user",
-      });
+      return res.status(404).json({ message: "No posts found for this user" });
     }
 
-    res.status(200).json({
-      message: "Posts fetched successfully",
-      userBlogs,
-    });
+    res.status(200).json({ message: "Posts fetched successfully", userBlogs });
   } catch (err) {
     console.error(err);
-    res.status(500).json({
-      message: "An error occurred while fetching blogs",
-    });
+    res.status(500).json({ message: "An error occurred while fetching blogs" });
   }
 });
 
+// Add new blog post
 blogsRoutes.post("/add", auth, async (req, res) => {
-  const { title, content } = req.body;
+  const { title, content, isPublic = true } = req.body;
   const userId = req.userId;
 
   if (!title || !content) {
-    res.status(403).json({
-      message: "Blogs body is empty",
-    });
-    return;
+    return res.status(400).json({ message: "Title and content are required" });
   }
 
   try {
     const user = await UserModel.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (!user) {
-      return res.status(404).json({
-        message: "User not found",
-      });
-    }
-
-    const author = user.username;
+    const slug = slugify(title);
+    const postExists = await BlogsModel.findOne({ slug });
+    if (postExists)
+      return res.status(409).json({ message: "Duplicate post slug" });
 
     const newPost = await BlogsModel.create({
       title,
       content,
-      author,
+      author: user.username,
       userId,
+      slug,
+      isPublic,
     });
 
-    res.status(201).json({
-      message: "Post successfully created",
-      post: newPost,
-    });
+    res
+      .status(201)
+      .json({ message: "Post successfully created", post: newPost });
   } catch (err) {
     console.error(err);
-    res.status(500).json({
-      message: "An error occurred while creating the post.",
-    });
+    res.status(500).json({ message: "Error creating the post" });
   }
 });
 
-blogsRoutes.get("/view/:postId", async (req, res) => {
-  const { postId } = req.params;
-  try {
-    const post = await BlogsModel.findById(postId);
+blogsRoutes.get("/view-for-edit/:slug", async (req, res) => {
+  const { slug } = req.params;
 
-    if (!post) {
-      res.status(404).json({
-        message: "Post not found",
-      });
-      return;
+  try {
+    const post = await BlogsModel.findOne({ slug });
+
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    if (!post.isPublic) {
+      if (!req.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      if (req.userId !== post.userId.toString()) {
+        return res.status(403).json({ message: "Access denied" });
+      }
     }
 
-    res.status(200).json({
-      post,
-    });
+    res.status(200).json({ post });
   } catch (err) {
-    res.status(500).json({
-      message: "Error happen while searching the post",
-    });
+    console.error("Error fetching post:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
+// Update blog post by postId
 blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
   const { postId } = req.params;
-  const { title, content } = req.body;
+  const { title, content, isPublic } = req.body;
   const userId = req.userId;
 
   try {
     const user = await UserModel.findById(userId);
-
     if (!user) {
-      return res.status(404).json({
-        message: "User not found",
-      });
+      return res.status(404).json({ message: "User not found" });
     }
+
+    // If title exists, generate slug from title
+    const newSlug = title ? slugify(title) : undefined;
 
     const updatedPost = await BlogsModel.findByIdAndUpdate(
       postId,
-      { title, content, author: user.username },
+      {
+        ...(title && { title }),
+        ...(content && { content }),
+        ...(newSlug && { slug: newSlug }),
+        ...(typeof isPublic === "boolean" && { isPublic }),
+        author: user.username,
+      },
       { new: true }
     );
 
@@ -116,18 +114,17 @@ blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    res.status(201).json({
+    res.status(200).json({
       message: "Post updated successfully",
       post: updatedPost,
     });
   } catch (err) {
     console.error(err);
-    return res
-      .status(500)
-      .json({ message: "An error occurred while updating the post" });
+    res.status(500).json({ message: "Error updating the post" });
   }
 });
 
+// Delete blog post by postId
 blogsRoutes.delete(
   "/delete/:postId",
   auth,
@@ -137,23 +134,15 @@ blogsRoutes.delete(
 
     try {
       const deletedPost = await BlogsModel.findByIdAndDelete(postId);
-
-      if (!deletedPost) {
+      if (!deletedPost)
         return res.status(404).json({ message: "Post not found" });
-      }
 
-      res.status(200).json({
-        message: "Post deleted successfully",
-      });
+      res.status(200).json({ message: "Post deleted successfully" });
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({ message: "An error occurred while deleting the post" });
+      res.status(500).json({ message: "Error deleting the post" });
     }
   }
 );
 
-module.exports = {
-  blogsRoutes: blogsRoutes,
-};
+module.exports = { blogsRoutes };

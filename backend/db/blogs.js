@@ -7,6 +7,8 @@ const BlogsSchema = new Schema({
   author: String,
   createdAt: { type: Date, default: Date.now },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+  isPublic: { type: Boolean, default: true },
+  slug: { type: String, required: true, unique: true },
 });
 
 const BlogsModel = mongoose.model("blogs", BlogsSchema);

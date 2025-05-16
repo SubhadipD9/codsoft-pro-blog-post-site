@@ -7,7 +7,6 @@ const slugify = require("../utils/slugify");
 
 const blogsRoutes = Router();
 
-// Fetch user posts
 blogsRoutes.get("/userPost", auth, async (req, res) => {
   try {
     const userBlogs = await BlogsModel.find({ userId: req.userId });
@@ -23,7 +22,6 @@ blogsRoutes.get("/userPost", auth, async (req, res) => {
   }
 });
 
-// Add new blog post
 blogsRoutes.post("/add", auth, async (req, res) => {
   const { title, content, isPublic = true } = req.body;
   const userId = req.userId;
@@ -83,7 +81,30 @@ blogsRoutes.get("/view-for-edit/:slug", async (req, res) => {
   }
 });
 
-// Update blog post by postId
+blogsRoutes.get("/display/:slug", async (req, res) => {
+  const { slug } = req.params;
+
+  try {
+    const post = await BlogsModel.findOne({ slug });
+
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    if (!post.isPublic) {
+      if (!req.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      if (req.userId !== post.userId.toString()) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+    }
+
+    res.status(200).json({ post });
+  } catch (err) {
+    console.error("Error fetching post:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
   const { postId } = req.params;
   const { title, content, isPublic } = req.body;
@@ -124,7 +145,6 @@ blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
   }
 });
 
-// Delete blog post by postId
 blogsRoutes.delete(
   "/delete/:postId",
   auth,

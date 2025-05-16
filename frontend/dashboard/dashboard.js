@@ -43,7 +43,8 @@ async function showPost() {
       authorEl.style.marginBottom = "10px";
 
       const contentEl = document.createElement("div");
-      contentEl.innerHTML = data.content;
+      const cleanHTML = DOMPurify.sanitize(data.content);
+      contentEl.innerText = cleanHTML;
       contentEl.style.fontSize = "16px";
       contentEl.style.lineHeight = "1.6";
       contentEl.style.color = "#333";

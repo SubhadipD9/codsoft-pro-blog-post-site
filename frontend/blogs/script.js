@@ -60,7 +60,6 @@ async function displayBlogs() {
     });
   } catch (error) {
     errorSection.textContent = "Failed to load blogs. Please try again.";
-    console.error("Fetch error:", error);
   }
 }
 

@@ -11,57 +11,118 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="dashboard.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
     <title>Create Page</title>
+
+    <style>
+        .createPost-form {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-family: 'Montserrat', sans-serif;
+            box-sizing: border-box;
+        }
+
+        .createPost-form input,
+        .createPost-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .createPost-form button {
+            padding: 12px 24px;
+            background-color: #3F72AF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .createPost-form button:hover {
+            background-color: #365f91;
+        }
+
+        .show-error {
+            color: red;
+            text-align: center;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #f4f4f4;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .createPost-form {
+                margin: 20px 16px;
+                padding: 16px;
+            }
+
+            .createPost-form input,
+            .createPost-form textarea {
+                font-size: 14px;
+            }
+
+            .createPost-form button {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background-color: #f4f4f4;
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                padding: 10px;
+                border-radius: 4px;
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: block;
+            }
+        }
+    </style>
 </head>
-
-<style>
-    .createPost-form {
-        max-width: 800px;
-        margin: 40px auto;
-        background: #fff;
-        padding: 24px;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        font-family: 'Montserrat', sans-serif;
-    }
-
-    .createPost-form input,
-    .createPost-form textarea {
-        width: 100%;
-        padding: 12px;
-        margin: 10px 0 20px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-    }
-
-    .createPost-form button {
-        padding: 12px 24px;
-        background-color: #3F72AF;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        cursor: pointer;
-    }
-
-    .createPost-form button:hover {
-        background-color: #365f91;
-    }
-
-    .show-error {
-        color: red;
-        text-align: center;
-    }
-</style>
 
 <body>
 
     <header>
         <div class="navbar">
             <div class="logo">Mind 🧠</div>
-            <nav class="nav-links">
+            <i class="fa fa-bars hamburger" id="hamburger"></i> <!-- Hamburger Icon -->
+            <nav class="nav-links" id="navLinks">
                 <a href="../blogs/index.html">Home</a>
                 <a href="dashboard.html">Dashboard</a>
                 <span id="user-greeting" style="display: none; font-size: 18px;"></span>
@@ -97,31 +158,32 @@
             e.preventDefault();
 
             try {
-
                 const response = await axios.post("http://localhost:3000/api/blogs/add", {
                     title: titleInput.value,
                     content: postContainer.value
                 }, {
                     headers: { authorization: token }
-                })
+                });
 
                 if (response.status === 201) {
                     alert("Post successfully created");
-                    window.location.href = "dashboard.html"
+                    window.location.href = "dashboard.html";
                 } else {
                     errorSection.textContent = "Something happen while create post";
                 }
-
             } catch (err) {
-                console.log(err)
+                console.log(err);
                 errorSection.textContent = "An error occurred while creating.";
             }
+        });
 
-        })
+        const hamburger = document.getElementById("hamburger");
+        const navLinks = document.getElementById("navLinks");
 
-
+        hamburger.addEventListener("click", () => {
+            navLinks.classList.toggle("active");
+        });
     </script>
 </body>
-
 
 </html>

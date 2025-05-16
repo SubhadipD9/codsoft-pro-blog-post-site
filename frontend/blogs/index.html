@@ -11,12 +11,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./index.css" />
+
 </head>
 
 <body>
     <header>
         <div class="navbar">
             <div class="logo">Mind 🧠</div>
+
+            <button class="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <nav class="nav-links">
                 <a href="../blogs/index.html">Home</a>
                 <a href="../dashboard/dashboard.html" id="dashboard">Dashboard</a>
@@ -34,6 +42,15 @@
     <div class="display-blogs" style="padding: 20px; max-width: 800px; margin: auto;"></div>
 
     <script src="script.js"></script>
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('show');
+        });
+    </script>
+
 </body>
 
 </html>

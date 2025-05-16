@@ -40,7 +40,8 @@ async function displayPost(slug) {
     authorEl.style.marginBottom = "16px";
 
     const contentEl = document.createElement("div");
-    contentEl.innerHTML = post.content;
+    const cleanHTML = DOMPurify.sanitize(post.content);
+    contentEl.innerText = cleanHTML;
     contentEl.style.fontSize = "16px";
     contentEl.style.lineHeight = "1.6";
     contentEl.style.color = "#333";
@@ -56,3 +57,24 @@ async function displayPost(slug) {
     console.error("Fetch error:", error);
   }
 }
+
+const username = localStorage.getItem("username");
+const signinBtn = document.getElementById("signin-btn");
+const signupBtn = document.getElementById("signup-btn");
+const dashboardBtn = document.getElementById("dashboard");
+
+window.addEventListener("DOMContentLoaded", () => {
+  const greeting = document.getElementById("user-greeting");
+
+  if (username && greeting) {
+    greeting.textContent = `👋 Hello, ${username}`;
+    greeting.style.display = "inline-block";
+    signinBtn.style.display = "none";
+    signupBtn.style.display = "none";
+    dashboardBtn.style.display = "block";
+  } else {
+    signinBtn.style.display = "block";
+    signupBtn.style.display = "block";
+    dashboardBtn.style.display = "none";
+  }
+});

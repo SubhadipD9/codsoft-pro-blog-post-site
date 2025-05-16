@@ -8,11 +8,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="icon" type="image/png" href="./icon/brain.png" />
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.1/dist/purify.min.js"></script>
-
     <link rel="stylesheet" href="./style.css">
     <title>Mind</title>
 </head>
@@ -21,6 +19,13 @@
     <header>
         <div class="navbar">
             <div class="logo">Mind 🧠</div>
+
+            <button class="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <nav class="nav-links">
                 <a href="./blogs/index.html">Blogs</a>
                 <a href="./signin/signin.html">Sign in</a>
@@ -30,9 +35,8 @@
     </header>
 
     <main class="hero">
-        <h1>Greate<br>stories & ideas</h1>
+        <h1>Great<br>stories & ideas</h1>
         <p>A place to read, write, and display your understanding to the world</p>
-        <!-- <a href="#" class="hero-btn">Start reading</a> -->
     </main>
 
     <footer>
@@ -40,8 +44,15 @@
             <p>Created by Subhadip. Inspired ❤️ by Medium</p>
         </div>
     </footer>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('show');
+        });
+    </script>
 </body>
-
-
 
 </html>

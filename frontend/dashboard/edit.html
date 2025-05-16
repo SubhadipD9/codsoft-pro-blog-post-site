@@ -76,7 +76,10 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../config.js"></script>
     <script>
+        const API_URL = CONFIG.API_URL;
+
         const urlParams = new URLSearchParams(window.location.search);
         const slug = urlParams.get("slug");
         const token = localStorage.getItem("token");
@@ -90,7 +93,7 @@
         if (!slug || !token) {
             errorDisplay.textContent = "Missing blog slug or authentication.";
         } else {
-            axios.get(`http://localhost:3000/api/blogs/view-for-edit/${slug}`, {
+            axios.get(`${API_URL}/api/blogs/view-for-edit/${slug}`, {
                 headers: { authorization: token }
             }).then(response => {
                 const post = response.data.post;
@@ -113,7 +116,7 @@
 
             try {
                 const response = await axios.put(
-                    `http://localhost:3000/api/blogs/edit/${postId}`,
+                    `${API_URL}/api/blogs/edit/${postId}`,
                     {
                         title: titleInput.value,
                         content: contentInput.value

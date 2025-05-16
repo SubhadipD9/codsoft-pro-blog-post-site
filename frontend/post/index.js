@@ -1,6 +1,8 @@
 const postSection = document.querySelector(".blog-post");
 const errorSection = document.querySelector(".show-error");
 
+const API_URL = CONFIG.API_URL;
+
 const urlParams = new URLSearchParams(window.location.search);
 const slug = urlParams.get("slug");
 
@@ -12,9 +14,7 @@ if (slug) {
 
 async function displayPost(slug) {
   try {
-    const response = await axios.get(
-      `http://localhost:3000/api/blogs/display/${slug}`
-    );
+    const response = await axios.get(`${API_URL}/api/blogs/display/${slug}`);
     const post = response.data.post;
 
     postSection.innerHTML = "";

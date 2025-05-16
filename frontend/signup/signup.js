@@ -1,5 +1,7 @@
 const form = document.querySelector(".signup-form");
 
+const API_URL = CONFIG.API_URL;
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -20,7 +22,7 @@ form.addEventListener("submit", async (event) => {
 
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/user/signup",
+      `${API_URL}/api/user/signup`,
       {
         email,
         password,

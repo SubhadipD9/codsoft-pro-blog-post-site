@@ -2,12 +2,14 @@ const greeting = document.getElementById("user-greeting");
 const signinBtn = document.getElementById("signin-btn");
 const signupBtn = document.getElementById("signup-btn");
 
+const API_URL = CONFIG.API_URL;
+
 const errorSection = document.querySelector(".error");
 const displaySection = document.querySelector(".display-blogs");
 
 async function displayBlogs() {
   try {
-    const response = await axios.get("http://localhost:3000/");
+    const response = await axios.get(`${API_URL}/`);
     const data = response.data.allPost;
 
     displaySection.innerHTML = "";

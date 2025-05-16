@@ -2,6 +2,8 @@ const userBlog = document.querySelector(".user-blog-post");
 const displayError = document.querySelector(".show-error");
 const createPost = document.querySelector(".create-post");
 
+const API_URL = CONFIG.API_URL;
+
 const token = localStorage.getItem("token");
 
 if (!token) {
@@ -12,12 +14,9 @@ if (!token) {
 
 async function showPost() {
   try {
-    const response = await axios.get(
-      "http://localhost:3000/api/blogs/userPost",
-      {
-        headers: { authorization: token },
-      }
-    );
+    const response = await axios.get(`${API_URL}/api/blogs/userPost`, {
+      headers: { authorization: token },
+    });
 
     const post = response.data.userBlogs;
     userBlog.innerHTML = "";
@@ -103,12 +102,9 @@ async function showPost() {
 
 async function deletePost(id) {
   try {
-    const response = await axios.delete(
-      `http://localhost:3000/api/blogs/delete/${id}`,
-      {
-        headers: { authorization: token },
-      }
-    );
+    const response = await axios.delete(`${API_URL}/api/blogs/delete/${id}`, {
+      headers: { authorization: token },
+    });
 
     const { data, status } = response;
 

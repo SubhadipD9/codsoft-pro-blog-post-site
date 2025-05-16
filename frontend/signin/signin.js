@@ -1,5 +1,7 @@
 const form = document.querySelector(".signin-form");
 
+const API_URL = CONFIG.API_URL;
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -8,7 +10,7 @@ form.addEventListener("submit", async (e) => {
   const errorSection = document.querySelector(".error-message");
 
   try {
-    const response = await axios.post("http://localhost:3000/api/user/signin", {
+    const response = await axios.post(`${API_URL}/api/user/signin`, {
       email,
       password,
     });

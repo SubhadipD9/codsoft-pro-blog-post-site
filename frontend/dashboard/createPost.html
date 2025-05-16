@@ -142,7 +142,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../config.js"></script>
     <script>
+        const API_URL = CONFIG.API_URL;
         const token = localStorage.getItem("token");
 
         if (!token) {
@@ -159,7 +161,7 @@
             e.preventDefault();
 
             try {
-                const response = await axios.post("http://localhost:3000/api/blogs/add", {
+                const response = await axios.post(`${API_URL}/api/blogs/add`, {
                     title: titleInput.value,
                     content: postContainer.value
                 }, {

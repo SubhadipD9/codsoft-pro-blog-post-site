@@ -63,8 +63,24 @@ async function displayBlogs() {
   }
 }
 
-const token = localStorage.getItem("token");
 const dashboardBtn = document.getElementById("dashboard");
+
+function isTokenExpired(token) {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const currentTime = Math.floor(Date.now() / 1000);
+    return payload.exp < currentTime;
+  } catch (e) {
+    return true;
+  }
+}
+
+const token = localStorage.getItem("token");
+if (token && isTokenExpired(token)) {
+  localStorage.removeItem("token");
+  localStorage.removeItem("username");
+  // window.location.href = "../signin/signin.html";
+}
 
 if (token) {
   signinBtn.style.display = "none";

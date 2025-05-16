@@ -10,6 +10,7 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="dashboard.css" />
+    <link rel="icon" type="image/png" href="../icon/brain.png" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Create Page</title>
 
@@ -172,8 +173,14 @@
                     errorSection.textContent = "Something happen while create post";
                 }
             } catch (err) {
-                console.log(err);
-                errorSection.textContent = "An error occurred while creating.";
+
+                if (err.response && err.response.status === 403) {
+                    alert("Session expired. Please sign in again.");
+                    localStorage.removeItem("token");
+                    window.location.href = "../signin/signin.html";
+                } else {
+                    errorSection.textContent = "An error occurred while creating.";
+                }
             }
         });
 

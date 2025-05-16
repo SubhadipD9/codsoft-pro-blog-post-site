@@ -54,7 +54,6 @@ async function displayPost(slug) {
   } catch (error) {
     errorSection.textContent =
       "Failed to load the blog post. Please try again.";
-    console.error("Fetch error:", error);
   }
 }
 
@@ -62,6 +61,22 @@ const username = localStorage.getItem("username");
 const signinBtn = document.getElementById("signin-btn");
 const signupBtn = document.getElementById("signup-btn");
 const dashboardBtn = document.getElementById("dashboard");
+
+function isTokenExpired(token) {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const currentTime = Math.floor(Date.now() / 1000);
+    return payload.exp < currentTime;
+  } catch (e) {
+    return true;
+  }
+}
+
+const token = localStorage.getItem("token");
+if (token && isTokenExpired(token)) {
+  localStorage.removeItem("token");
+  localStorage.removeItem("username");
+}
 
 window.addEventListener("DOMContentLoaded", () => {
   const greeting = document.getElementById("user-greeting");

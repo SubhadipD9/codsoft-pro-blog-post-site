@@ -90,7 +90,14 @@ async function showPost() {
     displayError.style.color = "red";
     displayError.style.display = "flex";
     displayError.style.justifyContent = "center";
-    displayError.textContent = "Something went wrong while loading posts.";
+    if (err.response && err.response.status === 403) {
+      alert("Session expired. Please sign in again.");
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      window.location.href = "../signin/signin.html";
+    } else {
+      displayError.textContent = "Something went wrong while loading posts.";
+    }
   }
 }
 

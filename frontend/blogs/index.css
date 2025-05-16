@@ -68,11 +68,13 @@ header {
   padding: 0.5rem 1rem;
   border-radius: 999px;
   font-weight: 500;
+  font-size: 1.125rem;
+  transition: padding var(--transition), font-size var(--transition), background-color var(--transition);
 }
 
 .nav-links .cta:hover {
-  background-color: rgb(57, 51, 51);
-  color: white;
+  background-color: var(--color-accent-hover);
+  color: #fff
 }
 
 .display-blogs {
@@ -136,7 +138,7 @@ header {
   .nav-links a,
   .nav-links .cta {
     width: 100%;
-    padding: 12px 0;
+    text-align: center;
   }
 
   .navbar {
@@ -154,7 +156,8 @@ header {
 
   .nav-links a,
   .nav-links .cta {
-    font-size: 0.95rem;
+    font-size: 1.125rem;
+    padding: 0.5rem 1rem;
   }
 
   .display-blogs {

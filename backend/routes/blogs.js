@@ -6,7 +6,7 @@ const { UserModel } = require("../db/users");
 
 const blogsRoutes = Router();
 
-blogsRoutes.get("/getAllPost", auth, async (req, res) => {
+blogsRoutes.get("/userPost", auth, async (req, res) => {
   try {
     const userId = req.userId;
     const userBlogs = await BlogsModel.find({ userId: userId });
@@ -19,7 +19,7 @@ blogsRoutes.get("/getAllPost", auth, async (req, res) => {
 
     res.status(200).json({
       message: "Posts fetched successfully",
-      data: userBlogs,
+      userBlogs,
     });
   } catch (err) {
     console.error(err);
@@ -116,7 +116,7 @@ blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    res.status(200).json({
+    res.status(201).json({
       message: "Post updated successfully",
       post: updatedPost,
     });

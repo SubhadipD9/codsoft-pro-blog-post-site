@@ -3,7 +3,10 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const { BlogsModel } = require("../db/blogs");
 
 const auth = (req, res, next) => {
-  const token = req.headers["authorization"]?.split(" ")[1];
+  const authHeader = req.headers["authorization"];
+  const token = authHeader?.startsWith("Bearer ")
+    ? authHeader.split(" ")[1]
+    : authHeader;
 
   if (!token) {
     return res.status(403).json({ message: "No token provided" });

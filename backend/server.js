@@ -9,13 +9,19 @@ const cors = require("cors");
 
 const app = express();
 
-const allowedOrigin = process.env.AUTHORIZE_URL;
-
 app.use(express.json());
+
+const allowedOrigin = process.env.AUTHORIZE_URL;
 
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin: function (origin, callback) {
+      if (!origin || origin === allowedOrigin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
   })
 );
 

@@ -1,12 +1,17 @@
 const { Router } = require("express");
 const axios = require("axios");
 const { BlogsModel } = require("../db/blogs");
+const { connectToDB } = require("../lib/dbConnect");
 
 const homeRoute = Router();
 
 homeRoute.get("/", async (req, res) => {
   try {
-    const allPost = await BlogsModel.find();
+    const { database } = await connectToDB();
+    // const allPost = await BlogsModel.find();
+    const collection = database.collection("blogs");
+
+    const allPost = await collection.find().toArray();
 
     if (!allPost || allPost.length === 0) {
       return res.status(404).json({

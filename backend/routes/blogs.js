@@ -4,12 +4,22 @@ const { checkOwnership } = require("../auth/middleware");
 const { BlogsModel } = require("../db/blogs");
 const { UserModel } = require("../db/users");
 const slugify = require("../utils/slugify");
+const { mongoose } = require("mongoose");
+const { connectToDB } = require("../lib/dbConnect");
 
 const blogsRoutes = Router();
 
 blogsRoutes.get("/userPost", auth, async (req, res) => {
   try {
-    const userBlogs = await BlogsModel.find({ userId: req.userId });
+    const { database } = await connectToDB();
+
+    const collection = database.collection("blogs");
+
+    const userId = new mongoose.Types.ObjectId(req.userId);
+
+    const userBlogs = await collection.find({ userId: userId }).toArray();
+
+    // const userBlogs = await BlogsModel.find({ userId: req.userId });
 
     if (!userBlogs || userBlogs.length === 0) {
       return res.status(404).json({ message: "No posts found for this user" });
@@ -85,7 +95,11 @@ blogsRoutes.get("/display/:slug", async (req, res) => {
   const { slug } = req.params;
 
   try {
-    const post = await BlogsModel.findOne({ slug });
+    const { database } = await connectToDB();
+
+    const collection = database.collection("blogs");
+    const post = await collection.findOne({ slug });
+    // const post = await BlogsModel.findOne({ slug });
 
     if (!post) return res.status(404).json({ message: "Post not found" });
 

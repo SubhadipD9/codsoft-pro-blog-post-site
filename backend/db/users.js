@@ -18,9 +18,6 @@ const User = new Schema({
   },
 });
 
-User.index({ email: 1 });
-User.index({ username: 1 });
-
 const UserModel = mongoose.model("users", User);
 
 module.exports = { UserModel };

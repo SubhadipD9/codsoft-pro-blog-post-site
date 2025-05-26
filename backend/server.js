@@ -6,12 +6,15 @@ const { blogsRoutes } = require("./routes/blogs");
 const { homeRoute } = require("./routes/home");
 const { commentRoutes } = require("./routes/comments");
 const cors = require("cors");
+const { rateLimiter } = require("./middlewares/rateLimiter");
 
 const app = express();
 
 app.use(express.json());
 
 const allowedOrigin = process.env.AUTHORIZE_URL;
+
+app.use(rateLimiter);
 
 app.use(
   cors({

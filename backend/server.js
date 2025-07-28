@@ -7,10 +7,13 @@ const { homeRoute } = require("./routes/home");
 const { commentRoutes } = require("./routes/comments");
 const cors = require("cors");
 const { rateLimiter } = require("./middlewares/rateLimiter");
+const helmet = require("helmet");
 
 const app = express();
 
 app.use(express.json());
+
+app.use(helmet());
 
 const allowedOrigin = process.env.AUTHORIZE_URL;
 

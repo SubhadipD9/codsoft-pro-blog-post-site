@@ -6,6 +6,7 @@ const { UserModel } = require("../db/users");
 const slugify = require("../utils/slugify");
 const { mongoose } = require("mongoose");
 const { connectToDB } = require("../lib/dbConnect");
+const xss = require("xss");
 
 const blogsRoutes = Router();
 
@@ -40,18 +41,21 @@ blogsRoutes.post("/add", auth, async (req, res) => {
     return res.status(400).json({ message: "Title and content are required" });
   }
 
+  const sanitizedTitle = xss(title);
+  const sanitizedContent = xss(content);
+
   try {
     const user = await UserModel.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    const slug = slugify(title);
+    const slug = slugify(sanitizedTitle);
     const postExists = await BlogsModel.findOne({ slug });
     if (postExists)
       return res.status(409).json({ message: "Duplicate post slug" });
 
     const newPost = await BlogsModel.create({
-      title,
-      content,
+      title: sanitizedTitle,
+      content: sanitizedContent,
       author: user.username,
       userId,
       slug,
@@ -112,7 +116,14 @@ blogsRoutes.get("/display/:slug", async (req, res) => {
       }
     }
 
-    res.status(200).json({ post });
+    res.status(200).json({
+      post: {
+        title: post.title,
+        content: post.content,
+        author: post.author,
+        slug: post.slug,
+      },
+    });
   } catch (err) {
     console.error("Error fetching post:", err);
     res.status(500).json({ message: "Server error" });
@@ -122,6 +133,10 @@ blogsRoutes.get("/display/:slug", async (req, res) => {
 blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
   const { postId } = req.params;
   const { title, content, isPublic } = req.body;
+
+  if (title) title = xss(title);
+  if (content) content = xss(content);
+
   const userId = req.userId;
 
   try {

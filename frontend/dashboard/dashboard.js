@@ -3,7 +3,6 @@ const displayError = document.querySelector(".show-error");
 const createPost = document.querySelector(".create-post");
 
 const API_URL = CONFIG.API_URL;
-
 const token = localStorage.getItem("token");
 
 if (!token) {
@@ -43,7 +42,7 @@ async function showPost() {
 
       const contentEl = document.createElement("div");
       const cleanHTML = DOMPurify.sanitize(data.content);
-      contentEl.innerText = cleanHTML;
+      contentEl.innerHTML = cleanHTML;
       contentEl.style.fontSize = "16px";
       contentEl.style.lineHeight = "1.6";
       contentEl.style.color = "#333";
@@ -89,14 +88,20 @@ async function showPost() {
     displayError.style.color = "red";
     displayError.style.display = "flex";
     displayError.style.justifyContent = "center";
-    if (err.response && err.response.status === 403) {
-      alert("Session expired. Please sign in again.");
-      localStorage.removeItem("token");
-      localStorage.removeItem("username");
-      window.location.href = "../signin/signin.html";
+    if (err.response) {
+      const { status } = err.response;
+      if (status === 403) {
+        alert("Session expired. Please sign in again.");
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        window.location.href = "../signin/signin.html";
+      } else if (status === 404) {
+        displayError.textContent = "You don't have any posts.";
+      } else {
+        displayError.textContent = "Something went wrong while loading posts.";
+      }
     } else {
-      displayError.textContent =
-        err.message || "Something went wrong while loading posts.";
+      displayError.textContent = "An unexpected error occurred.";
     }
   }
 }
@@ -114,25 +119,37 @@ async function deletePost(id) {
       showPost();
     }
   } catch (err) {
-    alert("Failed to delete todo: " + err.message);
+    const errorMessage = err.response ? err.response.data.message : err.message;
+    alert("Failed to delete post: " + errorMessage); // Improved error message
   }
 }
-const username = localStorage.getItem("username");
 
+// Token validation and redirection
+function checkToken() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location = "../signin/signin.html";
+  }
+  return token;
+}
+
+// Event listener for page load
 window.addEventListener("DOMContentLoaded", () => {
+  const username = localStorage.getItem("username");
   const greeting = document.getElementById("user-greeting");
 
   if (username && greeting) {
     greeting.textContent = `👋 Hello, ${username}`;
     greeting.style.display = "inline-block";
   }
-});
 
-if (username) {
-  document.getElementById("logout-btn").style.display = "inline-block";
-  document.getElementById("logout-btn").style.cursor = "pointer";
-  document.getElementById("logout-btn").addEventListener("click", () => {
-    localStorage.clear();
-    location.href = "../signin/signin.html";
-  });
-}
+  if (username) {
+    const logoutBtn = document.getElementById("logout-btn");
+    logoutBtn.style.display = "inline-block";
+    logoutBtn.style.cursor = "pointer";
+    logoutBtn.addEventListener("click", () => {
+      localStorage.clear();
+      location.href = "../signin/signin.html";
+    });
+  }
+});

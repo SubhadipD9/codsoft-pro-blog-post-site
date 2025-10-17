@@ -95,7 +95,8 @@ async function showPost() {
       localStorage.removeItem("username");
       window.location.href = "../signin/signin.html";
     } else {
-      displayError.textContent = "Something went wrong while loading posts.";
+      displayError.textContent =
+        err.response.message || "Something went wrong while loading posts.";
     }
   }
 }

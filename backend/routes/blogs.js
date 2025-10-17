@@ -105,7 +105,8 @@ blogsRoutes.get("/display/:slug", async (req, res) => {
     const post = await collection.findOne({ slug });
     // const post = await BlogsModel.findOne({ slug });
 
-    if (!post) return res.status(404).json({ message: "Post not found" });
+    if (!post)
+      return res.status(404).json({ message: "You don't have any post" });
 
     if (!post.isPublic) {
       if (!req.userId) {

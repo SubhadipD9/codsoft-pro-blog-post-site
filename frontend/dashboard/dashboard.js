@@ -96,7 +96,7 @@ async function showPost() {
       window.location.href = "../signin/signin.html";
     } else {
       displayError.textContent =
-        err.response.message || "Something went wrong while loading posts.";
+        err.message || "Something went wrong while loading posts.";
     }
   }
 }

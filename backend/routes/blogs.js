@@ -7,6 +7,7 @@ const slugify = require("../utils/slugify");
 const { mongoose } = require("mongoose");
 const { connectToDB } = require("../lib/dbConnect");
 const xss = require("xss");
+const { redis } = require("../lib/redis");
 
 const blogsRoutes = Router();
 
@@ -97,8 +98,24 @@ blogsRoutes.get("/view-for-edit/:slug", async (req, res) => {
 
 blogsRoutes.get("/display/:slug", async (req, res) => {
   const { slug } = req.params;
+  const cacheKey = `post:${slug}`; // Define a unique key for Redis.
 
   try {
+    // 1. Check Redis cache first
+    if (redis) {
+      const cachedPost = await redis.get(cacheKey);
+      if (cachedPost) {
+        console.log(`CACHE HIT for ${cacheKey}`);
+        return res.status(200).json({
+          post: cachedPost, // Note: cachedPost is already a JSON object
+          source: "cache",
+        });
+      }
+    }
+
+    // 2. If not in cache (CACHE MISS), fetch from the database
+    console.log(`CACHE MISS for ${cacheKey}. Fetching from DB.`);
+
     const { database } = await connectToDB();
 
     const collection = database.collection("blogs");
@@ -108,22 +125,30 @@ blogsRoutes.get("/display/:slug", async (req, res) => {
     if (!post)
       return res.status(404).json({ message: "You don't have any post" });
 
+    // Handle private posts (same logic as before)
     if (!post.isPublic) {
-      if (!req.userId) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
-      if (req.userId !== post.userId.toString()) {
+      if (!req.userId || req.userId !== post.userId.toString()) {
         return res.status(403).json({ message: "Access denied" });
       }
     }
 
+    const postToDisplay = {
+      title: post.title,
+      content: post.content,
+      author: post.author,
+      slug: post.slug,
+    };
+
+    // 3. Store the result in the cache for future requests.
+    // 'EX' sets an expiration time in seconds (e.g., 3600 = 1 hour)
+    if (redis) {
+      await redis.set(cacheKey, JSON.stringify(postToDisplay), { ex: 3600 });
+    }
+
+    // Return the response
     res.status(200).json({
-      post: {
-        title: post.title,
-        content: post.content,
-        author: post.author,
-        slug: post.slug,
-      },
+      post: postToDisplay,
+      source: "database",
     });
   } catch (err) {
     console.error("Error fetching post:", err);
@@ -165,6 +190,18 @@ blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
+    // If the post is updated, we must remove its old version from the cache.
+    if (redis) {
+      const cacheKey = `post:${updatedPost.slug}`;
+      console.log(`INVALIDATING CACHE for ${cacheKey}`);
+      await redis.del(cacheKey);
+    }
+
+    res.status(200).json({
+      message: "Post updated successfully",
+      post: updatedPost,
+    });
+
     res.status(200).json({
       message: "Post updated successfully",
       post: updatedPost,
@@ -186,6 +223,13 @@ blogsRoutes.delete(
       const deletedPost = await BlogsModel.findByIdAndDelete(postId);
       if (!deletedPost)
         return res.status(404).json({ message: "Post not found" });
+
+      // If a post is deleted, it must be removed from the cache.
+      if (redis) {
+        const cacheKey = `post:${deletedPost.slug}`;
+        console.log(`INVALIDATING CACHE for ${cacheKey}`);
+        await redis.del(cacheKey);
+      }
 
       res.status(200).json({ message: "Post deleted successfully" });
     } catch (err) {

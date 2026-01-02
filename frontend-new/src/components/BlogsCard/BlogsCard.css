@@ -1,0 +1,94 @@
+/* PostCard.css */
+
+/* 1. The Container */
+.post-card {
+  background: #ffffff;
+  border: 1px solid rgba(229, 231, 235, 0.5);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  color: #374151;
+  
+  /* Make it obvious it's clickable */
+  cursor: pointer; 
+  position: relative;
+}
+
+/* Hover Effect: Lift up and show shadow */
+.post-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.1);
+  border-color: #4f46e5; /* Highlight border on hover */
+}
+
+/* 2. Header Styles */
+.post-card .post-header {
+  margin-bottom: 12px;
+}
+
+.post-card .post-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.post-card .post-meta {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* 3. Content Preview */
+.post-card .post-content {
+  color: #4b5563;
+  line-height: 1.6;
+  font-size: 1rem;
+  
+  /* Limit height to create a "Preview" look */
+  max-height: 120px; 
+  overflow: hidden;
+  position: relative;
+  
+  /* Prevent markdown elements from breaking layout */
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+/* 4. "Read More" Hint */
+.read-more-hint {
+  margin-top: 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4f46e5; /* Primary Blue */
+  opacity: 0;
+  transform: translateY(5px);
+  transition: all 0.2s ease;
+}
+
+/* Show "Read full story" text only when hovering */
+.post-card:hover .read-more-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Markdown Reset Inside Card --- */
+/* This keeps the preview looking clean without huge headers */
+.post-card .post-content h1,
+.post-card .post-content h2,
+.post-card .post-content h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  display: inline; /* Forces headers to flow like text in preview */
+}
+
+.post-card .post-content img {
+  display: none; /* Hide images in the preview card to keep it neat */
+}

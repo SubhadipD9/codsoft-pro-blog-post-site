@@ -1,0 +1,104 @@
+/* BlogDetail.css */
+
+/* 1. Main Wrapper - Scoped by ID */
+#blog-detail-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: #111827;
+  background-color: transparent;
+  /* Ensure position context is standard */
+  position: relative; 
+}
+
+/* 2. Back Button - NUCLEAR RESET */
+/* We use !important to override ALL global styles from index.css */
+#blog-detail-page .back-link {
+  appearance: none !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #6b7280 !important;
+  cursor: pointer;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  margin: 0 0 30px 0 !important; /* Bottom margin only */
+  padding: 0 !important;
+  text-align: left;
+  display: inline-block;
+  width: auto !important;
+  outline: none;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
+#blog-detail-page .back-link:hover {
+  color: #111827 !important;
+  text-decoration: underline;
+  background: transparent !important;
+  transform: none !important; /* Stop any button movement effects */
+}
+
+/* 3. Header Area - FIXED OVERLAP & HEIGHT */
+#blog-detail-page .article-header {
+  /* Force the container to hold its children */
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important; /* Space between Title and Author */
+  
+  /* CRITICAL FIXES FOR OVERLAP */
+  height: auto !important;
+  min-height: auto !important;
+  width: 100%;
+  margin-bottom: 40px !important; /* Push content down hard */
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 20px;
+  position: static !important; /* Prevent absolute positioning issues */
+}
+
+#blog-detail-page .article-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.3 !important; /* Give lines room to breathe */
+  margin: 0 !important; /* Reset default browser margins */
+  color: #111827;
+  
+  /* Ensure wrapping works */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  height: auto !important;
+}
+
+#blog-detail-page .article-meta {
+  font-size: 1rem;
+  color: #6b7280;
+  font-weight: 500;
+  display: block;
+  margin-top: 0 !important;
+}
+
+#blog-detail-page .author-name {
+  color: #111827;
+  font-weight: 600;
+}
+
+/* 4. Content Area */
+#blog-detail-page .article-content {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #374151;
+  display: block;
+  
+  /* Ensure it clears the header */
+  clear: both;
+  margin-top: 0 !important; 
+}
+
+/* ... (Keep your Markdown styles below) ... */
+#blog-detail-page .article-content p { margin-bottom: 1.5rem; }
+#blog-detail-page .article-content h1, 
+#blog-detail-page .article-content h2 { color: #111827; font-weight: 700; margin-top: 2rem; }
+#blog-detail-page .article-content ul { padding-left: 20px; margin-bottom: 1.5rem; }
+#blog-detail-page .article-content img { max-width: 100%; height: auto; border-radius: 8px; }

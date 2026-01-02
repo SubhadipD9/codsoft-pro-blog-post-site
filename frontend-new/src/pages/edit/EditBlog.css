@@ -1,0 +1,170 @@
+/* CreatePost.css */
+
+/* 1. Main Container - Scoped by ID to override global styles */
+#edit-post-wrapper {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Inter', sans-serif;
+  color: #111827; /* Force text color */
+}
+
+/* Force H1 inside this wrapper to look correct */
+#edit-post-wrapper h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #111827;
+  text-align: left;
+}
+
+#edit-post-wrapper .form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+#edit-post-wrapper .form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* 2. Inputs */
+#edit-post-wrapper .form-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  background: #ffffff;
+  color: #111827;
+  transition: border-color 0.2s;
+}
+
+#edit-post-wrapper .form-input:focus {
+  border-color: #4f46e5; 
+}
+
+/* 3. Editor Tabs */
+#edit-post-wrapper .editor-tabs {
+  display: flex;
+  gap: 4px;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid #e5e7eb;
+  border-bottom: none;
+  width: fit-content;
+}
+
+/* Reset buttons inside the wrapper to avoid index.css styles */
+#edit-post-wrapper .tab-btn {
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: #6b7280;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+#edit-post-wrapper .tab-btn.active {
+  background: #ffffff;
+  color: #4f46e5;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  font-weight: 600;
+}
+
+/* 4. Textarea (Markdown Input) */
+#edit-post-wrapper .markdown-input {
+  width: 100%;
+  min-height: 400px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 0 8px 8px 8px;
+  font-family: 'Menlo', 'Monaco', monospace; /* Code font */
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  background-color: #ffffff;
+  color: #333;
+}
+
+#edit-post-wrapper .markdown-input:focus {
+  border-color: #4f46e5;
+}
+
+/* 5. Preview Area */
+#edit-post-wrapper .markdown-preview {
+  width: 100%;
+  min-height: 400px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 0 8px 8px 8px;
+  background-color: #fafafa;
+  overflow-y: auto;
+  text-align: left; /* Ensure text aligns left even if global says center */
+}
+
+/* Scoped Markdown Styles (So global H1/H2 doesn't mess it up) */
+#edit-post-wrapper .markdown-preview h1 { font-size: 1.8em; border-bottom: 1px solid #eee; padding-bottom: 0.3em; margin-bottom: 1em; color: #111; }
+#edit-post-wrapper .markdown-preview h2 { font-size: 1.4em; border-bottom: 1px solid #eee; padding-bottom: 0.3em; margin-top: 1.5em; margin-bottom: 1em; color: #111; }
+#edit-post-wrapper .markdown-preview p { margin-bottom: 1em; line-height: 1.7; color: #374151; }
+#edit-post-wrapper .markdown-preview ul { list-style: disc; padding-left: 20px; margin-bottom: 1em; }
+#edit-post-wrapper .markdown-preview ol { list-style: decimal; padding-left: 20px; margin-bottom: 1em; }
+#edit-post-wrapper .markdown-preview blockquote { border-left: 4px solid #e5e7eb; padding-left: 16px; color: #6b7280; font-style: italic; }
+#edit-post-wrapper .markdown-preview code { background: #e5e7eb; padding: 2px 4px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: #c7254e; }
+#edit-post-wrapper .markdown-preview pre { background: #1f2937; padding: 16px; border-radius: 8px; overflow-x: auto; color: #fff; margin-bottom: 1em; }
+#edit-post-wrapper .markdown-preview pre code { background: transparent; color: inherit; padding: 0; }
+
+/* 6. Submit Button */
+#edit-post-wrapper .submit-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px;
+  background-color: #111827;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  
+  /* Reset any global button outlines */
+  outline: none;
+  text-decoration: none;
+}
+
+#edit-post-wrapper .submit-btn:hover {
+  background-color: #000000;
+  transform: translateY(-1px);
+}
+
+#edit-post-wrapper .back-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 14px;
+  background-color: #335294;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  
+  /* Reset any global button outlines */
+  outline: none;
+  text-decoration: none;
+}
+
+#edit-post-wrapper .back-btn:hover {
+  background-color: #4d4a79;
+  transform: translateY(-1px);
+}

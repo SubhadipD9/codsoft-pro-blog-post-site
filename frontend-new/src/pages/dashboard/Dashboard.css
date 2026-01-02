@@ -1,0 +1,54 @@
+body {
+  background: #ffffff;
+}
+
+.dashboard-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+.dashboard-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  background-color: #fef2f2;
+  color: #991b1b;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #fecaca;
+  margin-bottom: 20px;
+}
+
+.empty-state {
+  text-align: center;
+  color: #6b7280;
+  margin-top: 50px;
+  font-size: 1.1rem;
+}
+
+/* Grid Layout for Cards */
+.posts-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Default single column */
+  gap: 24px;
+}
+
+/* Responsive Grid */
+@media (min-width: 768px) {
+  .posts-grid {
+    /* If you want 2 columns on larger screens, uncomment below */
+    /* grid-template-columns: repeat(2, 1fr); */
+  }
+}

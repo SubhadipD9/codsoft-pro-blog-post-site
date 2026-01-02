@@ -40,8 +40,7 @@ userRouter.post("/signup", async (req, res) => {
 
   if (!validationResult.success) {
     res.status(403).json({
-      message: "Incorrect format or you miss some data",
-      error: validationResult.error.issues[0].message,
+      message: validationResult.error.issues[0].message,
     });
     return;
   }

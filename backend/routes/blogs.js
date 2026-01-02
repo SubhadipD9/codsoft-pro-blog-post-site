@@ -158,7 +158,7 @@ blogsRoutes.get("/display/:slug", async (req, res) => {
 
 blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
   const { postId } = req.params;
-  const { title, content, isPublic } = req.body;
+  let { title, content, isPublic } = req.body;
 
   if (title) title = xss(title);
   if (content) content = xss(content);

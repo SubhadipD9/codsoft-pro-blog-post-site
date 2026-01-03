@@ -20,7 +20,7 @@ const Dashboard = () => {
       if (status === 403) {
         alert("Session expired. Please sign in again.");
         localStorage.clear();
-        navigate("/signin");
+        navigate("/login");
       } else if (status === 404) {
         setError("You haven't written any posts yet.");
       } else {
@@ -35,7 +35,7 @@ const Dashboard = () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      navigate("/signin");
+      navigate("/login");
       return;
     }
 

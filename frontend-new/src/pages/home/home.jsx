@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Mind</title>
+        <title>Evaluate Your Ideas with Mind</title>
       </Helmet>
       <div className="home-container">
         {/* Main Hero Section */}
@@ -22,7 +22,7 @@ const Home = () => {
           </p>
 
           {/* 'Get Started' usually points to Signup or the Blog Feed */}
-          <Link to="/signup" className="hero-btn">
+          <Link to="/blogs" className="hero-btn">
             Start Reading
           </Link>
         </main>
@@ -30,7 +30,22 @@ const Home = () => {
         {/* Footer Section */}
         <footer>
           <div className="footer-container">
-            <p>Created by Subhadip. Inspired ❤️ by Medium</p>
+            <p>
+              Created by ©Subhadip Bag.
+              <a
+                href="https://github.com/subhadipD9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="github-link"
+              >
+                {/* I used a standard GitHub icon URL here. You can also save this image to your public folder. */}
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/25/25231.png"
+                  alt="GitHub"
+                  className="github-logo"
+                />
+              </a>
+            </p>
           </div>
         </footer>
       </div>

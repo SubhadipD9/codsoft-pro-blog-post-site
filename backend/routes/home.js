@@ -1,18 +1,30 @@
 const { Router } = require("express");
-const axios = require("axios");
 const { BlogsModel } = require("../db/blogs");
-const { connectToDB } = require("../lib/dbConnect");
+const { redisClient } = require("../lib/redis.main");
 
 const homeRoute = Router();
 
 homeRoute.get("/", async (req, res) => {
   try {
-    // const { database } = await connectToDB();
-    // const allPost = await BlogsModel.find();
-    // const collection = database.collection("blogs");
+    const cacheKey = "posts:home";
 
-    // const allPost = await collection.find().toArray();
+    // Try cache
+    if (redisClient) {
+      const cachedPost = await redisClient.get(cacheKey);
 
+      if (cachedPost) {
+        console.log(`CACHE HIT for: ${cacheKey}`);
+
+        return res.status(200).json({
+          allPost: JSON.parse(cachedPost),
+          source: "cache",
+        });
+      }
+    }
+
+    console.log(`CACHE MISS for ${cacheKey}. Fetching from DB.`);
+
+    // Fetch from DB
     const projection = {
       title: 1,
       content: 1,
@@ -22,16 +34,27 @@ homeRoute.get("/", async (req, res) => {
 
     const queryFilter = { isPublic: true };
 
-    const allPost = await BlogsModel.find(queryFilter, projection);
+    const allPost = await BlogsModel.find(queryFilter, projection).lean();
 
-    if (!allPost || allPost.length === 0) {
+    if (!allPost.length) {
       return res.status(404).json({
         message: "No posts found",
       });
     }
 
+    // Store in cache
+    if (redisClient) {
+      await redisClient.set(
+        cacheKey,
+        JSON.stringify(allPost),
+        { EX: 300 }, // 5 minutes
+      );
+    }
+
+    // Respond
     res.status(200).json({
       allPost,
+      source: "db",
     });
   } catch (err) {
     console.error(err);
@@ -42,5 +65,5 @@ homeRoute.get("/", async (req, res) => {
 });
 
 module.exports = {
-  homeRoute: homeRoute,
+  homeRoute,
 };

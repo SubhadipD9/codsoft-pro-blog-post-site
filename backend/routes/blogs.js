@@ -7,7 +7,9 @@ const slugify = require("../utils/slugify");
 const { mongoose } = require("mongoose");
 const { connectToDB } = require("../lib/dbConnect");
 const xss = require("xss");
-const { redis } = require("../lib/redis");
+// const { redis } = require("../lib/redis");
+
+const { redisClient } = require("../lib/redis.main");
 
 const blogsRoutes = Router();
 
@@ -102,13 +104,13 @@ blogsRoutes.get("/display/:slug", async (req, res) => {
 
   try {
     // 1. Check Redis cache first
-    if (redis) {
-      const cachedPost = await redis.get(cacheKey);
+    if (redisClient) {
+      const cachedPost = await redisClient.get(cacheKey);
       if (cachedPost) {
         console.log(`CACHE HIT for ${cacheKey}`);
+        const post = JSON.parse(cachedPost);
         return res.status(200).json({
-          post: cachedPost, // Note: cachedPost is already a JSON object
-          source: "cache",
+          post: post,
         });
       }
     }
@@ -141,8 +143,10 @@ blogsRoutes.get("/display/:slug", async (req, res) => {
 
     // 3. Store the result in the cache for future requests.
     // 'EX' sets an expiration time in seconds (e.g., 3600 = 1 hour)
-    if (redis) {
-      await redis.set(cacheKey, JSON.stringify(postToDisplay), { ex: 3600 });
+    if (redisClient) {
+      await redisClient.set(cacheKey, JSON.stringify(postToDisplay), {
+        EX: 3600,
+      });
     }
 
     // Return the response
@@ -183,7 +187,7 @@ blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
         ...(typeof isPublic === "boolean" && { isPublic }),
         author: user.username,
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedPost) {
@@ -236,7 +240,7 @@ blogsRoutes.delete(
       console.error(err);
       res.status(500).json({ message: "Error deleting the post" });
     }
-  }
+  },
 );
 
 module.exports = { blogsRoutes };

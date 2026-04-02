@@ -5,14 +5,14 @@ const uri = process.env.DB_URL;
 
 let mongoClient = null;
 let database = null;
-const options = {};
+// const options = {};
 
 async function connectToDB() {
   try {
     if (mongoClient && database) {
       return { mongoClient, database };
     }
-    mongoClient = await new MongoClient(uri, options).connect();
+    mongoClient = await new MongoClient(uri).connect();
     database = mongoClient.db(process.env.MONGO_DB_NAME);
     console.log("Connected to MongoDB");
     return { mongoClient, database };

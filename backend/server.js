@@ -30,7 +30,8 @@ app.use(
       if (origin === allowedOrigin) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        // This line take care of any unauthorize access of the backend
+        callback("Blocked By CORS", false);
       }
     },
     credentials: true,
@@ -48,7 +49,7 @@ app.use("/api/blogs", blogsRoutes);
 
 app.use("/api/comments", commentRoutes);
 
-async function runServer(PORT) {
+async function runServer() {
   try {
     await mongoose.connect(DB_URL);
     console.log("Database connected");
@@ -59,4 +60,4 @@ async function runServer(PORT) {
   }
 }
 
-runServer(PORT);
+runServer();

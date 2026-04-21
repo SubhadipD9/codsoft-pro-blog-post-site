@@ -1,8 +1,8 @@
 // require("dotenv").config();
 const redis = require("redis");
 
-const redisClient = new redis.createClient({
-  username: process.env.REDIS_USERNAME,
+const redisClient = redis.createClient({
+  username: process.env.REDIS_USERNAME || 'default',
   password: process.env.REDIS_PASSWORD,
   socket: {
     host: process.env.REDIS_SOCKET,
@@ -10,17 +10,21 @@ const redisClient = new redis.createClient({
   },
 });
 
+
+redisClient.on("error", (err) => {
+  console.error("Redis client error: ", err);
+});
+
+redisClient.on("ready", () =>
+  console.log("New Redis client connected and ready")
+);
+
 (async () => {
-  await redisClient.on("error", (err) => {
-    console.log("Redis client error: ", err);
-    process.exit(1);
-  });
-
-  await redisClient.on("ready", () =>
-    console.log("New Redis client connected"),
-  );
-
-  await redisClient.connect();
+  try {
+    await redisClient.connect(); // Only await the actual connection
+  } catch (err) {
+    console.error("Could not connect to Redis", err);
+  }
 })();
 
 module.exports = { redisClient };

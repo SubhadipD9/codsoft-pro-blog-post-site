@@ -7,8 +7,6 @@ const slugify = require("../utils/slugify");
 const { mongoose } = require("mongoose");
 const { connectToDB } = require("../lib/dbConnect");
 const xss = require("xss");
-// const { redis } = require("../lib/redis");
-
 const { redisClient } = require("../lib/redis.main");
 
 const blogsRoutes = Router();
@@ -107,7 +105,7 @@ blogsRoutes.get("/display/:slug", async (req, res) => {
     if (redisClient) {
       const cachedPost = await redisClient.get(cacheKey);
       if (cachedPost) {
-        console.log(`CACHE HIT for ${cacheKey}`);
+        // console.log(`CACHE HIT for ${cacheKey}`);
         const post = JSON.parse(cachedPost);
         return res.status(200).json({
           post: post,
@@ -116,7 +114,7 @@ blogsRoutes.get("/display/:slug", async (req, res) => {
     }
 
     // 2. If not in cache (CACHE MISS), fetch from the database
-    console.log(`CACHE MISS for ${cacheKey}. Fetching from DB.`);
+    // console.log(`CACHE MISS for ${cacheKey}. Fetching from DB.`);
 
     const { database } = await connectToDB();
 

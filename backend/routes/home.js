@@ -13,7 +13,7 @@ homeRoute.get("/", async (req, res) => {
       const cachedPost = await redisClient.get(cacheKey);
 
       if (cachedPost) {
-        console.log(`CACHE HIT for: ${cacheKey}`);
+        // console.log(`CACHE HIT for: ${cacheKey}`);
 
         return res.status(200).json({
           allPost: JSON.parse(cachedPost),
@@ -22,7 +22,7 @@ homeRoute.get("/", async (req, res) => {
       }
     }
 
-    console.log(`CACHE MISS for ${cacheKey}. Fetching from DB.`);
+    // console.log(`CACHE MISS for ${cacheKey}. Fetching from DB.`);
 
     // Fetch from DB
     const projection = {

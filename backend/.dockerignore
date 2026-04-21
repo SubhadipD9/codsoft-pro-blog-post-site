@@ -146,5 +146,8 @@ vite.config.ts.timestamp-*
 .env
 .env.local
 
+# Vercel
+vercel.json
+
 # testing
 test.js

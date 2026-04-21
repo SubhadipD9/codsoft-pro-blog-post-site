@@ -20,7 +20,6 @@ function Blogs() {
         const data = await response.json();
 
         setBlogs(data.allPost);
-        setLoading(false);
       } catch (err) {
         console.error("Error fetching blogs:", err);
         setError("Failed to load blogs. Please try again later.");
@@ -32,15 +31,6 @@ function Blogs() {
     fetchAllBlogs();
   }, []);
 
-  // 1. Add a loading indicator
-  if (loading) {
-    return (
-      <div style={{ textAlign: "center", marginTop: "50px" }}>
-        Loading stories...
-      </div>
-    );
-  }
-
   return (
     <>
       <Navbar />
@@ -51,7 +41,7 @@ function Blogs() {
         {/* 4. Grid Display */}
         <div className="posts-grid">
           {blogs.map((post) => (
-            <BlogsCard key={post._id} post={post} />
+            <BlogsCard key={post._id} post={post} loading={loading} />
           ))}
         </div>
       </div>

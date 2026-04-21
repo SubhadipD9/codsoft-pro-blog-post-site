@@ -3,6 +3,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import "./BlogDetail.css";
+import { Helmet } from "react-helmet";
 
 const API_URL = import.meta.env.VITE_API_URL; // Update this with your backend URL
 
@@ -23,9 +24,12 @@ const BlogDetail = () => {
     const fetchPost = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${API_URL}/api/blogs/${slug}`, {
-          headers: { authorization: token },
-        });
+        const response = await axios.get(
+          `${API_URL}/api/blogs/display/${slug}`,
+          {
+            headers: { authorization: token },
+          },
+        );
         setPost(response.data);
         setLoading(false);
       } catch (err) {
@@ -38,9 +42,11 @@ const BlogDetail = () => {
     fetchPost();
   }, [slug, post]);
 
-  if (loading) return <div className="detail-loading">Loading story...</div>;
   if (error) return <div className="detail-error">{error}</div>;
-  if (!post) return <div className="detail-error">Post not found</div>;
+  if (!loading && !post)
+    return <div className="detail-error">Post not found</div>;
+
+  // console.log(post);
 
   return (
     <div id="blog-detail-page" className="blog-detail-wrapper">
@@ -48,13 +54,17 @@ const BlogDetail = () => {
         ← Back to Blogs
       </button>
 
+      <Helmet>
+        <title>{post?.title || "Loading story..."}</title>
+      </Helmet>
+
       <article className="blog-article">
         <header className="article-header">
-          <h1 className="article-title">{post.title}</h1>
+          <h1 className="article-title">{post?.title}</h1>
 
           <div className="article-meta">
-            <span className="author-name">By {post.author}</span>
-            {post.createdAt && (
+            <span className="author-name">By {post?.author}</span>
+            {post?.createdAt && (
               <span className="publish-date">
                 • Published on {new Date(post.createdAt).toLocaleDateString()}
               </span>
@@ -64,7 +74,7 @@ const BlogDetail = () => {
 
         {/* The Full Content */}
         <div className="article-content">
-          <ReactMarkdown>{post.content}</ReactMarkdown>
+          <ReactMarkdown>{post?.content || ""}</ReactMarkdown>
         </div>
       </article>
     </div>

@@ -71,7 +71,8 @@ const Dashboard = () => {
       alert("Post deleted successfully");
     } catch (err) {
       alert(
-        "Failed to delete post: " + (err.response?.data?.message || err.message)
+        "Failed to delete post: " +
+          (err.response?.data?.message || err.message),
       );
     }
   };
@@ -87,6 +88,7 @@ const Dashboard = () => {
         <title>Dashboard</title>
       </Helmet>
       <Navbar />
+
       <div className="dashboard-container">
         <div className="dashboard-header">
           <h1 className="dashboard-title">My Writings</h1>
@@ -99,7 +101,6 @@ const Dashboard = () => {
             <p>No posts found. Why not create one?</p>
           </div>
         )}
-
         <div className="posts-grid">
           {posts.map((post) => (
             <PostCard key={post._id} post={post} onDelete={deletePost} />

@@ -11,6 +11,7 @@ import Setting from "./pages/setting/Setting";
 import Blogs from "./pages/main/Blogs";
 import BlogDetail from "./pages/blog/BlogDetail";
 import Home from "./pages/home/home";
+import "./bones/registry";
 
 function App() {
   return (

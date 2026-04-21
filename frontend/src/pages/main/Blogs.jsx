@@ -20,11 +20,11 @@ function Blogs() {
         const data = await response.json();
 
         setBlogs(data.allPost);
+
+        setLoading(false);
       } catch (err) {
         console.error("Error fetching blogs:", err);
         setError("Failed to load blogs. Please try again later.");
-      } finally {
-        setLoading(false);
       }
     };
 

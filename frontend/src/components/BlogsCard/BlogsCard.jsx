@@ -10,6 +10,7 @@ const BlogsCard = ({ post, loading }) => {
 
   // Function to open the full blog post
   const handleReadFull = () => {
+    if (loading) return;
     navigate(`/blog`, { state: { post } });
   };
   // const handleReadFull = () => {
@@ -31,11 +32,11 @@ const BlogsCard = ({ post, loading }) => {
     >
       <article className="post-card" onClick={handleReadFull}>
         <div className="post-header">
-          <h2 className="post-title">{post.title}</h2>
+          <h2 className="post-title">{post?.title || ""}</h2>
           <div className="post-meta">
-            <span>By {post.author}</span>
+            <span>By {post?.author || ""}</span>
             {/* Optional: Show date if available */}
-            {post.createdAt && (
+            {post?.createdAt && (
               <span className="post-date">
                 {" "}
                 • {new Date(post.createdAt).toLocaleDateString()}
@@ -46,7 +47,7 @@ const BlogsCard = ({ post, loading }) => {
 
         <div className="post-content">
           {/* Show markdown preview */}
-          <ReactMarkdown>{post.content}</ReactMarkdown>
+          <ReactMarkdown>{post?.content || ""}</ReactMarkdown>
         </div>
 
         {/* Visual cue that there is more to read */}

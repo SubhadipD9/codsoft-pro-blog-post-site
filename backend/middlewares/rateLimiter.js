@@ -18,7 +18,7 @@ const rateLimiter = (req, res, next) => {
     }
   }
 
-  const maxRequests = 10;
+  const maxRequests = 100;
 
   if (requestCounts[ip].count > maxRequests) {
     return res

@@ -18,7 +18,6 @@ app.use(helmet());
 app.use(userAgent.express());
 
 app.use((req, res, next) => {
-  // The library identifies browser types and bots automatically
   if (req.useragent.isBot || !req.useragent.browser || req.useragent.browser === 'unknown') {
     return res.status(403).send('Browsers only');
   }

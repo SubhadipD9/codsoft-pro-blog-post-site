@@ -11,7 +11,7 @@ function Blogs() {
   const [error, setError] = useState("");
 
   const cardsToRender = loading
-    ? Array.from({ length: 3 }, (_, index) => ({ _id: `skeleton-${index}` }))
+    ? Array.from({ length: 6 }, (_, index) => ({ _id: `skeleton-${index}` }))
     : blogs;
 
   useEffect(() => {

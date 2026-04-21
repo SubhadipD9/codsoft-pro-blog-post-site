@@ -47,7 +47,7 @@ homeRoute.get("/", async (req, res) => {
       await redisClient.set(
         cacheKey,
         JSON.stringify(allPost),
-        { EX: 60 }, // 5 minutes
+        { EX: 300 }, // 5 minutes
       );
     }
 

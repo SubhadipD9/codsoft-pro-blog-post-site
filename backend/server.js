@@ -8,12 +8,22 @@ const { commentRoutes } = require("./routes/comments");
 const cors = require("cors");
 const { rateLimiter } = require("./middlewares/rateLimiter");
 const helmet = require("helmet");
+const userAgent = require("express-useragent");
 
 const app = express();
 
 app.use(express.json());
 
 app.use(helmet());
+app.use(userAgent.express());
+
+app.use((req, res, next) => {
+  // The library identifies browser types and bots automatically
+  if (req.useragent.isBot || !req.useragent.browser || req.useragent.browser === 'unknown') {
+    return res.status(403).send('Browsers only');
+  }
+  next();
+});
 
 const allowedOrigin = process.env.AUTHORIZE_URL;
 
@@ -27,16 +37,24 @@ app.use(rateLimiter);
 app.use(
   cors({
     origin: function (origin, callback) {
+      // 1. Block requests with no 'origin' (blocks Postman, cURL, and tools)
+      if (!origin) {
+        return callback(null, false);
+      }
+
+      // 2. Only allow if it matches your specific domain
       if (origin === allowedOrigin) {
         callback(null, true);
       } else {
-        // This line take care of any unauthorize access of the backend
-        callback("Blocked By CORS", false);
+        // 3. Block any unknown websites silently (No 500 error)
+        callback(null, false);
       }
     },
     credentials: true,
+    optionsSuccessStatus: 200,
   })
 );
+
 
 const PORT = process.env.PORT || 3001;
 const DB_URL = process.env.DB_URL;

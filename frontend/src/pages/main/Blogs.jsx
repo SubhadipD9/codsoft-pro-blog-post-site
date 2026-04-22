@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import BlogsCard from "../../components/BlogsCard/BlogsCard";
-import "./Blogs.css";
+import { BlogCardSkeleton } from "../../components/Skeleton/BlogCardSkeleton";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -31,18 +31,46 @@ function Blogs() {
     fetchAllBlogs();
   }, []);
 
+  useEffect(() => {
+    if (loading) return;
+
+    const savedScrollY = sessionStorage.getItem("blogs-scroll-y");
+    if (!savedScrollY) return;
+
+    const y = Number(savedScrollY);
+    if (Number.isFinite(y)) {
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: y, left: 0, behavior: "auto" });
+      });
+    }
+
+    sessionStorage.removeItem("blogs-scroll-y");
+  }, [loading]);
+
   return (
     <>
-      <Navbar />
-      <div className="dashboard-container">
-        {/* 2. Error Display */}
-        {error && <div className="error-message">{error}</div>}
+      <div className="bg-white min-h-screen">
+        <Navbar />
 
-        {/* 4. Grid Display */}
-        <div className="posts-grid">
-          {blogs.map((post) => (
-            <BlogsCard key={post._id} post={post} loading={loading} />
-          ))}
+        {/* .dashboard-container -> max-w-[900px] mx-auto my-10 px-5 */}
+        <div className="max-w-230 mx-auto my-10 px-5 font-sans">
+          {/* Error Display */}
+          {error && (
+            <div className="bg-red-50 text-red-800 p-4 rounded-lg text-center border border-red-200 mb-5">
+              {error}
+            </div>
+          )}
+
+          {/* Grid Display */}
+          <div className="grid grid-cols-1 gap-6">
+            {loading
+              ? /* Render 6 skeletons INSIDE the grid when loading */
+                Array.from({ length: 6 }).map((_, index) => (
+                  <BlogCardSkeleton key={`skeleton-${index}`} />
+                ))
+              : /* Render real cards when data is loaded */
+                blogs.map((post) => <BlogsCard key={post._id} post={post} />)}
+          </div>
         </div>
       </div>
     </>

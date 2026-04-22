@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate, Link } from "react-router-dom";
-import "./Signup.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -47,61 +46,85 @@ function Signup() {
   };
 
   return (
-    <div className="page">
+    <div className="flex min-h-screen items-center justify-center p-4">
       <Helmet>
         <title>Signup</title>
       </Helmet>
 
-      <div className="card">
-        <div className="header">
-          <h1>Signup</h1>
-          <p>Signup to post blogs</p>
+      <div className="w-full max-w-105 rounded-xl bg-white p-8 shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
+        <div className="mb-6 text-center">
+          <h1 className="text-[1.75rem]">Signup</h1>
+          <p className="mt-1 text-[0.9rem] text-slate-500">
+            Signup to post blogs
+          </p>
         </div>
 
-        {error && <div className="error">{error}</div>}
+        {error && (
+          <div className="mb-4 rounded-lg bg-red-50 p-2.5 text-center text-[0.85rem] text-red-700">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSignup}>
-          <div className="field">
-            <label htmlFor="username">Username</label>
+          <div className="mb-4 flex flex-col">
+            <label
+              htmlFor="username"
+              className="mb-1.5 text-[0.85rem] text-slate-700"
+            >
+              Username
+            </label>
             <input
               id="username"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="johndoe21"
+              className="rounded-lg border border-indigo-100 px-3 py-2.5 text-[0.95rem] outline-none transition-all focus:border-indigo-600 focus:shadow-[0_0_0_2px_rgba(99,102,241,0.2)]"
               required
             />
           </div>
 
-          <div className="field">
-            <label htmlFor="email">Email</label>
+          <div className="mb-4 flex flex-col">
+            <label
+              htmlFor="email"
+              className="mb-1.5 text-[0.85rem] text-slate-700"
+            >
+              Email
+            </label>
             <input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="johndoe@email.com"
+              className="rounded-lg border border-indigo-100 px-3 py-2.5 text-[0.95rem] outline-none transition-all focus:border-indigo-600 focus:shadow-[0_0_0_2px_rgba(99,102,241,0.2)]"
               required
             />
           </div>
 
           {/* Password with toggle */}
-          <div className="field">
-            <label htmlFor="password">Password</label>
+          <div className="mb-4 flex flex-col">
+            <label
+              htmlFor="password"
+              className="mb-1.5 text-[0.85rem] text-slate-700"
+            >
+              Password
+            </label>
 
-            <div className="password-wrapper">
+            <div className="relative flex items-center">
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
+                className="w-full rounded-lg border border-indigo-100 px-3 py-2.5 pr-16 text-[0.95rem] outline-none transition-all focus:border-indigo-600 focus:shadow-[0_0_0_2px_rgba(99,102,241,0.2)]"
                 required
               />
 
               <button
                 type="button"
-                className="toggle-password"
+                className="absolute right-2.5 w-auto cursor-pointer border-none bg-transparent p-0 text-[0.8rem] text-indigo-600 hover:underline"
                 onClick={() => setShowPassword((prev) => !prev)}
               >
                 {showPassword ? "Hide" : "Show"}
@@ -109,12 +132,22 @@ function Signup() {
             </div>
           </div>
 
-          <button type="submit" disabled={loading}>
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-3 w-full cursor-pointer rounded-lg border-none bg-indigo-600 p-3 text-base font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70"
+          >
             {loading ? "Logging in..." : "Login"}
           </button>
 
-          <div className="footer">
-            Already have an account! <Link to="/login">Login</Link>
+          <div className="mt-4 text-center text-[0.85rem] text-slate-600">
+            Already have an account!{" "}
+            <Link
+              to="/login"
+              className="font-medium text-indigo-600 hover:underline"
+            >
+              Login
+            </Link>
           </div>
         </form>
       </div>

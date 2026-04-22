@@ -2,10 +2,27 @@ import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
-import "./BlogDetail.css";
 import { Helmet } from "react-helmet";
 
 const API_URL = import.meta.env.VITE_API_URL; // Update this with your backend URL
+
+const markdownComponents = {
+  img: ({ src, alt, title }) => {
+    if (!src) return null;
+
+    return (
+      <figure className="my-8">
+        <img
+          src={src}
+          alt={alt || "Blog image"}
+          title={title}
+          loading="lazy"
+          className="mx-auto block max-h-130 w-full rounded-xl border border-gray-200 bg-white object-contain shadow-sm"
+        />
+      </figure>
+    );
+  },
+};
 
 const BlogDetail = () => {
   const { slug } = useParams(); // Get the slug from the URL
@@ -16,6 +33,19 @@ const BlogDetail = () => {
   const [post, setPost] = useState(location.state?.post || null);
   const [loading, setLoading] = useState(!location.state?.post);
   const [error, setError] = useState(null);
+
+  const handleBackToBlogs = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+    navigate("/blogs");
+  };
+
+  // Reset scroll so opening a blog always starts from the top.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [slug]);
 
   // 2. If no data (e.g., user refreshed page), fetch from API
   useEffect(() => {
@@ -42,15 +72,27 @@ const BlogDetail = () => {
     fetchPost();
   }, [slug, post]);
 
-  if (error) return <div className="detail-error">{error}</div>;
+  if (error)
+    return (
+      <div className="mx-auto mt-10 max-w-200 px-5 text-center text-red-700">
+        {error}
+      </div>
+    );
   if (!loading && !post)
-    return <div className="detail-error">Post not found</div>;
+    return (
+      <div className="mx-auto mt-10 max-w-200 px-5 text-center text-red-700">
+        Post not found
+      </div>
+    );
 
   // console.log(post);
 
   return (
-    <div id="blog-detail-page" className="blog-detail-wrapper">
-      <button onClick={() => navigate("/blogs")} className="back-link">
+    <div className="relative mx-auto min-h-screen max-w-200 bg-transparent px-5 py-10 font-sans text-gray-900">
+      <button
+        onClick={handleBackToBlogs}
+        className="mb-7.5 inline-block w-auto appearance-none border-none bg-transparent p-0 text-left text-base font-medium text-gray-500 no-underline shadow-none transition-colors hover:text-gray-900 hover:underline"
+      >
         ← Back to Blogs
       </button>
 
@@ -58,14 +100,18 @@ const BlogDetail = () => {
         <title>{post?.title || "Loading story..."}</title>
       </Helmet>
 
-      <article className="blog-article">
-        <header className="article-header">
-          <h1 className="article-title">{post?.title}</h1>
+      <article>
+        <header className="mb-10 flex w-full flex-col gap-4 border-b border-gray-200 pb-5">
+          <h1 className="m-0 wrap-break-word text-[2.5rem] font-extrabold leading-[1.3] text-gray-900">
+            {post?.title}
+          </h1>
 
-          <div className="article-meta">
-            <span className="author-name">By {post?.author}</span>
+          <div className="mt-0 block text-base font-medium text-gray-500">
+            <span className="font-semibold text-gray-900">
+              By {post?.author}
+            </span>
             {post?.createdAt && (
-              <span className="publish-date">
+              <span>
                 • Published on {new Date(post.createdAt).toLocaleDateString()}
               </span>
             )}
@@ -73,8 +119,16 @@ const BlogDetail = () => {
         </header>
 
         {/* The Full Content */}
-        <div className="article-content">
-          <ReactMarkdown>{post?.content || ""}</ReactMarkdown>
+        <div
+          className="mt-0 clear-both text-[1.15rem] leading-[1.8] text-gray-700
+          [&_h1]:mt-8 [&_h1]:font-bold [&_h1]:text-gray-900
+          [&_h2]:mt-8 [&_h2]:font-bold [&_h2]:text-gray-900
+          [&_p]:mb-6
+          [&_ul]:mb-6 [&_ul]:pl-5"
+        >
+          <ReactMarkdown components={markdownComponents}>
+            {post?.content || ""}
+          </ReactMarkdown>
         </div>
       </article>
     </div>

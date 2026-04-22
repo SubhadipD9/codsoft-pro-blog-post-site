@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./index.css";
 import Signup from "./pages/signup/Signup";
 import Login from "./pages/login/Login";
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -11,7 +10,6 @@ import Setting from "./pages/setting/Setting";
 import Blogs from "./pages/main/Blogs";
 import BlogDetail from "./pages/blog/BlogDetail";
 import Home from "./pages/home/home";
-import "./bones/registry";
 
 function App() {
   return (

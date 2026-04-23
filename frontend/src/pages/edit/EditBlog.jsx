@@ -40,6 +40,7 @@ function EditBlog() {
   const [title, setTitle] = useState(data?.title || "");
   const [content, setContent] = useState(data?.content || "");
   const [activeTab, setActiveTab] = useState("write");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Safety check: If data is null, redirect.
@@ -53,6 +54,7 @@ function EditBlog() {
   if (!data) return null;
 
   const handleEdit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const token = localStorage.getItem("token");
 
@@ -71,6 +73,8 @@ function EditBlog() {
     } catch (err) {
       console.error(err);
       alert("Error editing post");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -174,7 +178,7 @@ function EditBlog() {
             type="submit"
             className="mt-5 w-full rounded-lg border-none bg-gray-900 px-4 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-px hover:bg-black"
           >
-            Publish Post
+            {loading ? "Publishing..." : "Publish"}
           </button>
         </form>
       </div>

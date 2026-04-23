@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Signup from "./pages/signup/Signup";
 import Login from "./pages/login/Login";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Profile from "./pages/profile/Profile";
@@ -17,7 +16,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/blogs" element={<Blogs />} />
-        <Route path="/signup" element={<Signup />} />
+        {/* This is my personal site */}
+        {/* <Route path="/signup" element={<Signup />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/blog" element={<BlogDetail />} />
 
@@ -68,7 +68,7 @@ function App() {
         />
 
         {/* Catch-all redirect */}
-        {/* <Route path="*" element={<Login />} /> */}
+        <Route path="*" element={<Blogs />} />
       </Routes>
     </BrowserRouter>
   );

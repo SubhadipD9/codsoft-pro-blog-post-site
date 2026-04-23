@@ -112,7 +112,7 @@ function Login() {
             {loading ? "Logging in..." : "Login"}
           </button>
 
-          <div className="mt-4 text-center text-[0.85rem] text-slate-600">
+          {/* <div className="mt-4 text-center text-[0.85rem] text-slate-600">
             Don&apos;t have an account?{" "}
             <Link
               to="/signup"
@@ -120,7 +120,7 @@ function Login() {
             >
               Signup
             </Link>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>

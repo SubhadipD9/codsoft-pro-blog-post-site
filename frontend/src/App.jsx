@@ -9,6 +9,7 @@ import Setting from "./pages/setting/Setting";
 import Blogs from "./pages/main/Blogs";
 import BlogDetail from "./pages/blog/BlogDetail";
 import Home from "./pages/home/home";
+import { NotFound } from "./pages/notFound/NotFound";
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
         {/* This is my personal site */}
         {/* <Route path="/signup" element={<Signup />} /> */}
         <Route path="/login" element={<Login />} />
-        <Route path="/blog" element={<BlogDetail />} />
+        <Route path="/blog/:slug" element={<BlogDetail />} />
 
         {/* Protected Routes: Wrap each component manually */}
         <Route
@@ -68,7 +69,7 @@ function App() {
         />
 
         {/* Catch-all redirect */}
-        <Route path="*" element={<Blogs />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

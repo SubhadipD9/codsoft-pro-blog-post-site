@@ -9,7 +9,11 @@ const BlogsCard = ({ post, loading }) => {
   const handleReadFull = () => {
     if (loading) return;
     sessionStorage.setItem("blogs-scroll-y", String(window.scrollY));
-    navigate(`/blog`, { state: { post } });
+    navigate(`/blog/${post.slug}`, {
+      state: {
+        post,
+      },
+    });
   };
 
   return (

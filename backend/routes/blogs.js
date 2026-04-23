@@ -203,11 +203,6 @@ blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
       message: "Post updated successfully",
       post: updatedPost,
     });
-
-    res.status(200).json({
-      message: "Post updated successfully",
-      post: updatedPost,
-    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error updating the post" });

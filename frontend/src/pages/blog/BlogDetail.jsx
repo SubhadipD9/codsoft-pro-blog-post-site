@@ -149,6 +149,7 @@ const BlogDetail = () => {
       <Helmet>
         <title>{post?.title || "Loading story..."}</title>
       </Helmet>
+
       <button
         onClick={handleBackToBlogs}
         className="mb-7 text-gray-500 hover:text-gray-900 hover:underline"
@@ -156,15 +157,15 @@ const BlogDetail = () => {
         ← Back to Blogs
       </button>
 
-      <ShareButton />
       <article>
-        <header className="mb-10 border-b border-gray-200 pb-5">
+        {/* 1. Added 'relative' to the header so the absolute share button sticks to it */}
+        <header className="relative mb-10 border-b border-gray-200 pb-5">
           <h1 className="text-[2.5rem] font-extrabold leading-[1.3]">
             {post?.title || "Untitled"}
           </h1>
 
           <div className="text-sm text-gray-500">
-            <span className="font-semibold text-gray-900">
+            <span className="font-semibold text-gray-800 text-base">
               By {post?.author || "Unknown"}
             </span>
 
@@ -172,9 +173,12 @@ const BlogDetail = () => {
               <span> • {new Date(post.createdAt).toLocaleDateString()}</span>
             )}
           </div>
+
+          {/* 2. Moved ShareButton INSIDE the header */}
+          <ShareButton />
         </header>
 
-        {/* ✅ Updated wrapper for Markdown content here */}
+        {/* Markdown content */}
         <div className="prose prose-lg prose-gray max-w-none">
           <ReactMarkdown components={markdownComponents}>
             {post?.content || "No content available"}

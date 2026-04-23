@@ -4,6 +4,7 @@ import checkIcon from "../../assets/check.png";
 
 export const ShareButton = () => {
   const [copied, setCopied] = useState(false);
+
   const handelCopy = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -16,27 +17,29 @@ export const ShareButton = () => {
       console.error(error.message);
     }
   };
+
   return (
-    <div>
-      <button
-        onClick={handelCopy}
-        type="button"
-        className="absolute right-3 flex items-center justify-center cursor-pointer border-none bg-transparent p-1 transition-opacity hover:opacity-70"
-      >
-        {copied ? (
-          <img
-            src={checkIcon}
-            alt="share"
-            className="w-6 h-6 mt-5 object-contain"
-          />
-        ) : (
-          <img
-            src={shareIcon}
-            alt="share"
-            className="w-6 h-6 mt-5 object-contain"
-          />
-        )}
-      </button>
-    </div>
+    <button
+      onClick={handelCopy}
+      type="button"
+      // Added bottom-0 and adjusted right positioning
+      className="absolute bottom-2 right-2 flex items-center justify-center cursor-pointer border-none bg-transparent p-1 transition-opacity hover:opacity-70"
+    >
+      {copied ? (
+        <img
+          src={checkIcon}
+          alt="copied"
+          // Removed mt-5 so the icon aligns perfectly with the bottom
+          className="w-6 h-6 object-contain"
+        />
+      ) : (
+        <img
+          src={shareIcon}
+          alt="share"
+          // Removed mt-5
+          className="w-6 h-6 object-contain"
+        />
+      )}
+    </button>
   );
 };

@@ -5,6 +5,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import { ShareButton } from "../../components/ShareButton/ShareButton";
+import { Helmet } from "react-helmet";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -145,6 +146,9 @@ const BlogDetail = () => {
 
   return (
     <div className="relative mx-auto min-h-screen max-w-200 px-5 py-10 text-gray-900">
+      <Helmet>
+        <title>{post?.title || "Loading story..."}</title>
+      </Helmet>
       <button
         onClick={handleBackToBlogs}
         className="mb-7 text-gray-500 hover:text-gray-900 hover:underline"
@@ -152,7 +156,7 @@ const BlogDetail = () => {
         ← Back to Blogs
       </button>
 
-      <ShareButton className="" />
+      <ShareButton />
       <article>
         <header className="mb-10 border-b border-gray-200 pb-5">
           <h1 className="text-[2.5rem] font-extrabold leading-[1.3]">

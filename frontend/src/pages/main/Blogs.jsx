@@ -58,9 +58,17 @@ function Blogs() {
 
       // 2️⃣ Fetch from API if not cached
       try {
+        if (!API_URL) {
+          throw new Error("VITE_API_URL is not configured");
+        }
+
         const response = await fetch(`${API_URL}/`, {
           method: "GET",
         });
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
 
         const data = await response.json();
 

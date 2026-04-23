@@ -3,6 +3,10 @@
   "private": true,
   "version": "0.0.2",
   "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/bones/registry.js"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",

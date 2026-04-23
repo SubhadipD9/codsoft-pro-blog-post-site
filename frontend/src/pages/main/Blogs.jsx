@@ -1,9 +1,45 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import BlogsCard from "../../components/BlogsCard/BlogsCard";
 import { BlogCardSkeleton } from "../../components/Skeleton/BlogCardSkeleton";
 
 const API_URL = import.meta.env.VITE_API_URL;
+
+// Cache utility (5-minute TTL)
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_KEY = "blogs_list_cache";
+
+const getCachedBlogs = () => {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (!cached) return null;
+
+    const { data, timestamp } = JSON.parse(cached);
+    if (Date.now() - timestamp > CACHE_DURATION) {
+      localStorage.removeItem(CACHE_KEY);
+      return null;
+    }
+
+    return data;
+  } catch (e) {
+    return null;
+  }
+};
+
+const setCachedBlogs = (blogs) => {
+  try {
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({
+        data: blogs,
+        timestamp: Date.now(),
+      }),
+    );
+  } catch (e) {
+    console.warn("Cache storage full, skipping cache");
+  }
+};
 
 function Blogs() {
   const [blogs, setBlogs] = useState([]);
@@ -12,6 +48,15 @@ function Blogs() {
 
   useEffect(() => {
     const fetchAllBlogs = async () => {
+      // 1️⃣ Check cache first
+      const cachedBlogs = getCachedBlogs();
+      if (cachedBlogs) {
+        setBlogs(cachedBlogs);
+        setLoading(false);
+        return;
+      }
+
+      // 2️⃣ Fetch from API if not cached
       try {
         if (!API_URL) {
           throw new Error("VITE_API_URL is not configured");
@@ -27,7 +72,8 @@ function Blogs() {
 
         const data = await response.json();
 
-        setBlogs(data.allPost || []);
+        setCachedBlogs(data.allPost);
+        setBlogs(data.allPost);
       } catch (err) {
         console.error("Error fetching blogs:", err);
         setError("Failed to load blogs. Please try again later.");

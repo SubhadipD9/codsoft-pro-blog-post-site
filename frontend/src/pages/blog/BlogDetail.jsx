@@ -1,10 +1,46 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
-import { Helmet } from "react-helmet";
+import { ShareButton } from "../../components/ShareButton/ShareButton";
 
-const API_URL = import.meta.env.VITE_API_URL; // Update this with your backend URL
+const API_URL = import.meta.env.VITE_API_URL;
+
+const CACHE_DURATION = 5 * 60 * 1000;
+const CACHE_KEY = "blog_post_slug";
+
+const getCachedPost = () => {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (!cached) return null;
+
+    const { data, timestamp } = JSON.parse(cached);
+    if (Date.now() - timestamp > CACHE_DURATION) {
+      localStorage.removeItem(CACHE_KEY);
+      return null;
+    }
+
+    return data;
+  } catch (e) {
+    return null;
+  }
+};
+
+const setCachedPost = (post) => {
+  try {
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({
+        data: post,
+        timestamp: Date.now(),
+      }),
+    );
+  } catch (e) {
+    console.warn("Cache storage full, skipping cache");
+  }
+};
 
 const markdownComponents = {
   img: ({ src, alt, title }) => {
@@ -25,102 +61,118 @@ const markdownComponents = {
 };
 
 const BlogDetail = () => {
-  const { slug } = useParams(); // Get the slug from the URL
+  const { slug } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
 
-  // 1. Try to use data passed from the dashboard click (Instant Load)
+  // ✅ Use navigation state if available (instant render)
   const [post, setPost] = useState(location.state?.post || null);
   const [loading, setLoading] = useState(!location.state?.post);
   const [error, setError] = useState(null);
 
+  // Back button
   const handleBackToBlogs = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
-      return;
-    }
     navigate("/blogs");
   };
 
-  // Reset scroll so opening a blog always starts from the top.
+  // Always scroll to top when slug changes
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [slug]);
 
-  // 2. If no data (e.g., user refreshed page), fetch from API
+  // ✅ Fetch only if we don't already have post
   useEffect(() => {
-    if (post) return; // If we already have the post, stop here.
+    if (!slug) return;
+    const cachedPost = getCachedPost();
+    if (cachedPost) {
+      setPost(cachedPost);
+      setLoading(false);
+      return;
+    }
+
+    if (post) {
+      setLoading(false);
+      return;
+    }
 
     const fetchPost = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${API_URL}/api/blogs/${slug}`, {
+
+        const res = await axios.get(`${API_URL}/api/blogs/display/${slug}`, {
           headers: { authorization: token },
         });
-        setPost(response.data);
-        setLoading(false);
+
+        setCachedPost(res.data.post);
+        setPost(res.data.post);
       } catch (err) {
-        console.error(err);
-        setError("Could not load the story.");
+        console.error("Error fetching blog:", err.message, err.response?.data);
+        setError(err.response?.data?.message || "Could not load the story.");
+      } finally {
         setLoading(false);
       }
     };
 
     fetchPost();
-  }, [slug, post]);
+  }, [slug]);
 
-  if (error)
+  // Error state
+  if (error) {
     return (
       <div className="mx-auto mt-10 max-w-200 px-5 text-center text-red-700">
         {error}
       </div>
     );
-  if (!loading && !post)
+  }
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="mx-auto mt-10 max-w-200 px-5 text-center text-gray-600">
+        Loading...
+      </div>
+    );
+  }
+
+  // Not found state
+  if (!post) {
     return (
       <div className="mx-auto mt-10 max-w-200 px-5 text-center text-red-700">
         Post not found
       </div>
     );
-
-  // console.log(post);
+  }
 
   return (
-    <div className="relative mx-auto min-h-screen max-w-200 bg-transparent px-5 py-10 font-sans text-gray-900">
+    <div className="relative mx-auto min-h-screen max-w-200 px-5 py-10 text-gray-900">
       <button
         onClick={handleBackToBlogs}
-        className="mb-7.5 inline-block w-auto appearance-none border-none bg-transparent p-0 text-left text-base font-medium text-gray-500 no-underline shadow-none transition-colors hover:text-gray-900 hover:underline"
+        className="mb-7 text-gray-500 hover:text-gray-900 hover:underline"
       >
         ← Back to Blogs
       </button>
 
+      <ShareButton className="" />
       <article>
-        <header className="mb-10 flex w-full flex-col gap-4 border-b border-gray-200 pb-5">
-          <h1 className="m-0 wrap-break-word text-[2.5rem] font-extrabold leading-[1.3] text-gray-900">
-            {post?.title}
+        <header className="mb-10 border-b border-gray-200 pb-5">
+          <h1 className="text-[2.5rem] font-extrabold leading-[1.3]">
+            {post?.title || "Untitled"}
           </h1>
 
-          <div className="mt-0 block text-base font-medium text-gray-500">
+          <div className="text-sm text-gray-500">
             <span className="font-semibold text-gray-900">
-              By {post?.author}
+              By {post?.author || "Unknown"}
             </span>
+
             {post?.createdAt && (
-              <span>
-                • Published on {new Date(post.createdAt).toLocaleDateString()}
-              </span>
+              <span> • {new Date(post.createdAt).toLocaleDateString()}</span>
             )}
           </div>
         </header>
 
-        {/* The Full Content */}
-        <div
-          className="mt-0 clear-both text-[1.15rem] leading-[1.8] text-gray-700
-          [&_h1]:mt-8 [&_h1]:font-bold [&_h1]:text-gray-900
-          [&_h2]:mt-8 [&_h2]:font-bold [&_h2]:text-gray-900
-          [&_p]:mb-6
-          [&_ul]:mb-6 [&_ul]:pl-5"
-        >
+        <div className="text-[1.15rem] leading-[1.8] text-gray-700">
           <ReactMarkdown components={markdownComponents}>
-            {post?.content || ""}
+            {post?.content || "No content available"}
           </ReactMarkdown>
         </div>
       </article>

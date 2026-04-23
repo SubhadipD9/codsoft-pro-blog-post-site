@@ -28,8 +28,9 @@ const Navbar = () => {
       <div className="mx-auto grid h-full max-w-300 grid-cols-3 items-center px-6">
         {/* LEFT (mobile menu button) */}
         <div className="flex items-center">
+          {/* ✅ Changed md:hidden to lg:hidden */}
           <button
-            className="flex h-5 w-7.5 flex-col justify-between border-none bg-transparent p-0 md:hidden"
+            className="flex h-5 w-7.5 flex-col justify-between border-none bg-transparent p-0 lg:hidden"
             onClick={() => setIsMobileOpen(!isMobileOpen)}
             aria-label="Toggle menu"
           >
@@ -43,7 +44,7 @@ const Navbar = () => {
         <div className="flex justify-center">
           <Link
             to="/blogs"
-            className="text-3xl font-extrabold text-gray-900 no-underline font-serif"
+            className="font-serif text-3xl font-extrabold text-gray-900 no-underline"
           >
             Mind
           </Link>
@@ -51,10 +52,11 @@ const Navbar = () => {
 
         {/* RIGHT (nav items) */}
         <div className="flex justify-end">
+          {/* ✅ Changed all md: to lg:, added gap-4 for mobile spacing */}
           <nav
             className={`${
-              isMobileOpen ? "flex" : "hidden"
-            } absolute top-17.5 left-0 w-full flex-col items-start bg-white p-4 shadow-md md:static md:flex md:w-auto md:flex-row md:items-center md:gap-8 md:bg-transparent md:p-0 md:shadow-none`}
+              isMobileOpen ? "flex gap-4" : "hidden"
+            } absolute top-17.5 left-0 w-full flex-col items-start bg-white p-4 shadow-md lg:static lg:flex lg:w-auto lg:flex-row lg:items-center lg:gap-6 lg:bg-transparent lg:p-0 lg:shadow-none`}
           >
             {username ? (
               <>
@@ -67,16 +69,17 @@ const Navbar = () => {
                 </Link>
 
                 <Link to="/create" className={primaryNavLinkClass}>
-                  Write Post
+                  Create
                 </Link>
 
                 {/* User Dropdown */}
-                <div className="group relative mt-3 w-full cursor-pointer md:mt-0 md:ml-4 md:flex md:h-full md:w-auto md:items-center">
-                  <div className="hidden h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-[1.1rem] font-bold text-white md:flex">
+                {/* ✅ Changed all md: to lg: */}
+                <div className="group relative mt-3 w-full cursor-pointer lg:mt-0 lg:ml-4 lg:flex lg:h-full lg:w-auto lg:items-center">
+                  <div className="hidden h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-[1.1rem] font-bold text-white lg:flex">
                     {initial}
                   </div>
 
-                  <div className="w-full rounded-xl border border-gray-200/50 bg-white p-2 md:absolute md:top-full md:right-0 md:w-55 md:translate-y-2 md:opacity-0 md:shadow-lg md:transition-all md:duration-200 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:group-hover:visible md:invisible">
+                  <div className="w-full rounded-xl border border-gray-200/50 bg-white p-2 lg:invisible lg:absolute lg:right-0 lg:top-full lg:w-55 lg:translate-y-2 lg:opacity-0 lg:shadow-lg lg:transition-all lg:duration-200 lg:group-hover:visible lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
                     <div className="mb-2 border-b border-gray-200/50 p-3 text-[0.85rem] text-gray-500">
                       Signed in as <br />
                       <strong className="mt-0.5 block text-base text-gray-900">

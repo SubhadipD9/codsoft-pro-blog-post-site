@@ -174,7 +174,8 @@ const BlogDetail = () => {
           </div>
         </header>
 
-        <div className="text-[1.15rem] leading-[1.8] text-gray-700">
+        {/* ✅ Updated wrapper for Markdown content here */}
+        <div className="prose prose-lg prose-gray max-w-none">
           <ReactMarkdown components={markdownComponents}>
             {post?.content || "No content available"}
           </ReactMarkdown>

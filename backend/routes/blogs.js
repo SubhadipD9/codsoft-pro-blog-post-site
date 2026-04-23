@@ -105,7 +105,7 @@ blogsRoutes.get("/display/:slug", async (req, res) => {
     if (redisClient) {
       const cachedPost = await redisClient.get(cacheKey);
       if (cachedPost) {
-        // console.log(`CACHE HIT for ${cacheKey}`);
+        console.log(`CACHE HIT for ${cacheKey}`);
         const post = JSON.parse(cachedPost);
         return res.status(200).json({
           post: post,
@@ -193,10 +193,10 @@ blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
     }
 
     // If the post is updated, we must remove its old version from the cache.
-    if (redis) {
+    if (redisClient) {
       const cacheKey = `post:${updatedPost.slug}`;
-      console.log(`INVALIDATING CACHE for ${cacheKey}`);
-      await redis.del(cacheKey);
+      // console.log(`INVALIDATING CACHE for ${cacheKey}`);
+      await redisClient.del(cacheKey);
     }
 
     res.status(200).json({
@@ -227,10 +227,10 @@ blogsRoutes.delete(
         return res.status(404).json({ message: "Post not found" });
 
       // If a post is deleted, it must be removed from the cache.
-      if (redis) {
+      if (redisClient) {
         const cacheKey = `post:${deletedPost.slug}`;
         console.log(`INVALIDATING CACHE for ${cacheKey}`);
-        await redis.del(cacheKey);
+        await redisClient.del(cacheKey);
       }
 
       res.status(200).json({ message: "Post deleted successfully" });

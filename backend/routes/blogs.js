@@ -43,7 +43,7 @@ blogsRoutes.post("/add", auth, async (req, res) => {
   }
 
   const sanitizedTitle = xss(title);
-  const sanitizedContent = xss(content);
+  // const sanitizedContent = xss(content);
 
   try {
     const user = await UserModel.findById(userId);
@@ -56,7 +56,7 @@ blogsRoutes.post("/add", auth, async (req, res) => {
 
     const newPost = await BlogsModel.create({
       title: sanitizedTitle,
-      content: sanitizedContent,
+      content: content,
       author: user.username,
       userId,
       slug,

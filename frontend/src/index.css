@@ -1,2 +1,30 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@layer base {
+  /* 1. Remove the backticks globally for all prose code */
+  .prose code::before,
+  .prose code::after {
+    content: "" !important;
+  }
+
+  /* 2. Style INLINE code (not inside a <pre> block) */
+  /* This makes it red and removes the bold weight */
+  .prose :not(pre) > code {
+    color: #e11d48 !important; /* rose-600 */
+    background-color: #f1f5f9 !important; /* slate-100 */
+    padding: 0.2rem 0.4rem !important;
+    border-radius: 0.375rem !important;
+    font-weight: 400 !important;
+    font-size: 0.9em !important;
+  }
+
+  /* 3. Style CODE BLOCKS (the big black boxes) */
+  /* This ensures the code inside doesn't turn red */
+  .prose pre code {
+    color: inherit !important;
+    background-color: transparent !important;
+    padding: 0 !important;
+    font-weight: inherit !important;
+  }
+}

@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import axios from "axios";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
+import remarkGfm from "remark-gfm";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -141,7 +142,10 @@ const CreatePost = () => {
               >
                 {/* This converts the markdown text to HTML */}
                 {content ? (
-                  <ReactMarkdown components={markdownComponents}>
+                  <ReactMarkdown
+                    components={markdownComponents}
+                    remarkPlugins={[remarkGfm]}
+                  >
                     {content}
                   </ReactMarkdown>
                 ) : (

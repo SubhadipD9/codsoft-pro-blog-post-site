@@ -6,6 +6,7 @@ import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import { ShareButton } from "../../components/ShareButton/ShareButton";
 import { Helmet } from "react-helmet";
+import remarkGfm from "remark-gfm";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -180,7 +181,10 @@ const BlogDetail = () => {
 
         {/* Markdown content */}
         <div className="prose prose-lg prose-gray max-w-none">
-          <ReactMarkdown components={markdownComponents}>
+          <ReactMarkdown
+            components={markdownComponents}
+            remarkPlugins={[remarkGfm]}
+          >
             {post?.content || "No content available"}
           </ReactMarkdown>
         </div>

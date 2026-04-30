@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const BlogsCard = ({ post, loading }) => {
   const navigate = useNavigate();
@@ -47,7 +48,9 @@ const BlogsCard = ({ post, loading }) => {
                    [&_h3]:text-base [&_h3]:font-bold [&_h3]:m-0 [&_h3]:inline 
                    [&_img]:hidden"
       >
-        <ReactMarkdown>{post?.content || ""}</ReactMarkdown>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {post?.content || ""}
+        </ReactMarkdown>
       </div>
 
       {/* "Read More" Hint */}

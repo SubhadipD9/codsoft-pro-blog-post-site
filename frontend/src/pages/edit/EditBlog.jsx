@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { Helmet } from "react-helmet";
 import axios from "axios";
+import remarkGfm from "remark-gfm";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -165,7 +166,10 @@ function EditBlog() {
                 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-5"
               >
                 {content ? (
-                  <ReactMarkdown components={markdownComponents}>
+                  <ReactMarkdown
+                    components={markdownComponents}
+                    remarkPlugins={[remarkGfm]}
+                  >
                     {content}
                   </ReactMarkdown>
                 ) : (

@@ -163,7 +163,7 @@ blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
   let { title, content, isPublic } = req.body;
 
   if (title) title = xss(title);
-  if (content) content = xss(content);
+  // ✅ content is NOT sanitized anymore
 
   const userId = req.userId;
 
@@ -180,7 +180,7 @@ blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
       postId,
       {
         ...(title && { title }),
-        ...(content && { content }),
+        ...(content !== undefined && { content }), // ✅ slight improvement (keeps empty string)
         ...(newSlug && { slug: newSlug }),
         ...(typeof isPublic === "boolean" && { isPublic }),
         author: user.username,
@@ -192,10 +192,8 @@ blogsRoutes.put("/edit/:postId", auth, checkOwnership, async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    // If the post is updated, we must remove its old version from the cache.
     if (redisClient) {
       const cacheKey = `post:${updatedPost.slug}`;
-      // console.log(`INVALIDATING CACHE for ${cacheKey}`);
       await redisClient.del(cacheKey);
     }
 

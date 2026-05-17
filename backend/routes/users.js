@@ -15,71 +15,71 @@ if (!JWT_SECRET) {
   throw new Error("JWT_SECRET is not defined in environment variables");
 }
 
-userRouter.post("/signup", async (req, res) => {
-  const requireUserData = z.object({
-    email: z.string().min(3).max(30).email(),
-    password: z
-      .string()
-      .min(6)
-      .refine((password) => /[A-Z]/.test(password), {
-        message: "Required atleast one uppercase character",
-      })
-      .refine((password) => /[a-z]/.test(password), {
-        message: "Required atleast one lowercase character",
-      })
-      .refine((password) => /[0-9]/.test(password), {
-        message: "Required atleast one number",
-      })
-      .refine((password) => /[!@#$%^&*]/.test(password), {
-        message: "Required atleast one special character",
-      }),
-    username: z.string().min(3).max(30),
-  });
+// userRouter.post("/signup", async (req, res) => {
+//   const requireUserData = z.object({
+//     email: z.string().min(3).max(30).email(),
+//     password: z
+//       .string()
+//       .min(6)
+//       .refine((password) => /[A-Z]/.test(password), {
+//         message: "Required atleast one uppercase character",
+//       })
+//       .refine((password) => /[a-z]/.test(password), {
+//         message: "Required atleast one lowercase character",
+//       })
+//       .refine((password) => /[0-9]/.test(password), {
+//         message: "Required atleast one number",
+//       })
+//       .refine((password) => /[!@#$%^&*]/.test(password), {
+//         message: "Required atleast one special character",
+//       }),
+//     username: z.string().min(3).max(30),
+//   });
 
-  const validationResult = requireUserData.safeParse(req.body);
+//   const validationResult = requireUserData.safeParse(req.body);
 
-  if (!validationResult.success) {
-    res.status(403).json({
-      message: validationResult.error.issues[0].message,
-    });
-    return;
-  }
+//   if (!validationResult.success) {
+//     res.status(403).json({
+//       message: validationResult.error.issues[0].message,
+//     });
+//     return;
+//   }
 
-  const userData = validationResult.data;
+//   const userData = validationResult.data;
 
-  try {
-    const [existingEmail, existingUserName] = await Promise.all([
-      UserModel.findOne({ email: userData.email }),
-      UserModel.findOne({ username: userData.username }),
-    ]);
+//   try {
+//     const [existingEmail, existingUserName] = await Promise.all([
+//       UserModel.findOne({ email: userData.email }),
+//       UserModel.findOne({ username: userData.username }),
+//     ]);
 
-    if (existingEmail || existingUserName) {
-      res.status(409).json({
-        message: existingEmail
-          ? "This email already exists"
-          : "This username is already taken",
-      });
-      return;
-    }
+//     if (existingEmail || existingUserName) {
+//       res.status(409).json({
+//         message: existingEmail
+//           ? "This email already exists"
+//           : "This username is already taken",
+//       });
+//       return;
+//     }
 
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
+//     const hashedPassword = await bcrypt.hash(userData.password, 10);
 
-    await UserModel.create({
-      email: userData.email,
-      password: hashedPassword,
-      username: userData.username,
-    });
+//     await UserModel.create({
+//       email: userData.email,
+//       password: hashedPassword,
+//       username: userData.username,
+//     });
 
-    res.status(201).json({
-      message: "User successfully created",
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      message: "An error occurred while registering the user.",
-    });
-  }
-});
+//     res.status(201).json({
+//       message: "User successfully created",
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({
+//       message: "An error occurred while registering the user.",
+//     });
+//   }
+// });
 
 userRouter.post("/signin", async (req, res) => {
   const { email, password } = req.body;

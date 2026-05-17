@@ -123,7 +123,7 @@ blogsRoutes.get("/display/:slug", async (req, res) => {
     // const post = await BlogsModel.findOne({ slug });
 
     if (!post)
-      return res.status(404).json({ message: "You don't have any post" });
+      return res.status(404).json({ message: "This post is not avaliable" });
 
     // Handle private posts (same logic as before)
     if (!post.isPublic) {
